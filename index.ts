@@ -40,10 +40,17 @@ const server = new McpServer(
   }
 );
 
+const registerTool = server.tool.bind(server) as (
+  name: string,
+  description: string,
+  paramsSchema: Record<string, z.ZodTypeAny>,
+  cb: (args: any) => Promise<{ content: Array<{ type: "text"; text: string }> }>,
+) => unknown;
+
 // ----- CONSOLIDATED KANBAN TOOLS -----
 
 // 1. Project and Board Manager
-server.tool(
+registerTool(
   "mcp_kanban_project_board_manager",
   "Manage projects and boards with various operations",
   {
@@ -196,7 +203,7 @@ server.tool(
 );
 
 // 2. List Manager
-server.tool(
+registerTool(
   "mcp_kanban_list_manager",
   "Manage kanban lists with various operations",
   {
@@ -264,7 +271,7 @@ server.tool(
 );
 
 // 3. Card Manager
-server.tool(
+registerTool(
   "mcp_kanban_card_manager",
   "Manage kanban cards with various operations",
   {
@@ -425,7 +432,7 @@ server.tool(
 );
 
 // 4. Stopwatch Manager
-server.tool(
+registerTool(
   "mcp_kanban_stopwatch",
   "Manage card stopwatches for time tracking",
   {
@@ -465,7 +472,7 @@ server.tool(
 );
 
 // 5. Label Manager
-server.tool(
+registerTool(
   "mcp_kanban_label_manager",
   "Manage kanban labels with various operations",
   {
@@ -572,7 +579,7 @@ server.tool(
 );
 
 // 6. Task List Manager (New for v2.0)
-server.tool(
+registerTool(
   "mcp_kanban_task_list_manager",
   "Manage task lists with various operations (Planka v2.0)",
   {
@@ -633,7 +640,7 @@ server.tool(
 );
 
 // 7. Task Manager
-server.tool(
+registerTool(
   "mcp_kanban_task_manager",
   "Manage kanban tasks with various operations",
   {
@@ -735,7 +742,7 @@ server.tool(
 );
 
 // 8. Comment Manager
-server.tool(
+registerTool(
   "mcp_kanban_comment_manager",
   "Manage card comments with various operations",
   {
@@ -794,7 +801,7 @@ server.tool(
 );
 
 // 9. Membership Manager
-server.tool(
+registerTool(
   "mcp_kanban_membership_manager",
   "Manage board memberships with various operations",
   {
@@ -866,7 +873,7 @@ server.tool(
 );
 
 // 10. Card Membership Manager (with user resolution)
-server.tool(
+registerTool(
   "mcp_kanban_card_membership_manager",
   "Manage memberships of a card (assign users by ID, email, or username)",
   {
