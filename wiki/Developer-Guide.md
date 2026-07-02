@@ -42,18 +42,21 @@ kanban-mcp/
 ### 🛠️ Setting Up the Development Environment
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/Navya-Tecnologia/planka-v2-mcp.git
    cd kanban-mcp
    ```
 
 2. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**:
    Configure these to point to your **external Planka v2.0 instance**:
+
    ```bash
    PLANKA_BASE_URL=http://your-planka-instance:3333
    PLANKA_AGENT_EMAIL=agent@yourdomain.com
@@ -79,6 +82,7 @@ The MCP tools are consolidated into manager-style tools in `index.ts`.
 ### 📂 Implementing Task Lists (Planka v2.0)
 
 Planka v2.0 introduces **Task Lists** as a parent container for tasks.
+
 - **Operations**: `operations/taskLists.ts` handles the API calls.
 - **Task Attachment**: Tasks MUST have a `taskListId`. `operations/tasks.ts` provides backward compatibility for `cardId`.
 
@@ -105,11 +109,14 @@ npx jest tests/integration.test.ts
 The project uses **GitHub Actions** to automate the publishing of new versions to **NPM** and **GitHub Releases**.
 
 ### 🛠️ Configuration
+
 To enable automated releases, the following secret must be configured in GitHub (`Settings > Secrets and variables > Actions`):
+
 - `NPM_TOKEN`: A classic or granular automation token from your NPM account.
 
 ### 📦 How to Release a New Version
-Releases are triggered automatically when a new **Git Tag** starting with `v` (e.g., `v1.3.4`) is pushed to the repository.
+
+Releases are triggered automatically when a new **Git Tag** starting with `v` (e.g., `v1.3.5`) is pushed to the repository.
 
 1. **Update the version**:
    Update `package.json` and `common/version.ts` to the new version number.
@@ -126,7 +133,9 @@ Releases are triggered automatically when a new **Git Tag** starting with `v` (e
    ```
 
 ### 🎈 What the Workflow Does
+
 Once the tag is pushed, the `publish.yml` workflow will:
+
 1. **Build & Test**: Compile the source and run unit tests.
 2. **NPM Pack**: Create the production tarball (`.tgz`).
 3. **GitHub Release**: Create a new release in the repository and attach the tarball.

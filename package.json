@@ -1,6 +1,6 @@
 {
   "name": "@navyatec/planka-v2-mcp",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "description": "MCP server for Planka v2.x Kanban board",
   "license": "MIT",
   "author": "NAVYA TECNOLOGÍA 2024, S.L. (original by Brad Risse)",
@@ -34,7 +34,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.6.1",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "@types/node": "^22",
     "@types/node-fetch": "^2.6.12",
     "node-fetch": "^3.3.2",

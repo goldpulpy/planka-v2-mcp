@@ -26,10 +26,12 @@ A specialized Model Context Protocol (MCP) server that enables LLMs (like Claude
 ## 🚀 Quick Start (Connect to your Planka v2.x)
 
 ### 1. Prerequisites
+
 - A functional **Planka v2.x** instance reachable via network.
 - An agent user created in Planka with the necessary permissions.
 
 ### 2. Configure Your Client (Cursor/Claude/Antigravity)
+
 The easiest way is using **npx**. Add the following to your MCP configuration:
 
 ```json
@@ -50,7 +52,9 @@ The easiest way is using **npx**. Add the following to your MCP configuration:
 ```
 
 #### Alternative: Local Setup
+
 If you have the code locally, pointing to the built file:
+
 ```json
 {
   "mcpServers": {
@@ -64,6 +68,7 @@ If you have the code locally, pointing to the built file:
 ```
 
 Ask Claude:
+
 - "Groom the Backlog board and break down the top card into tasks."
 - "Start tracking time for the 'UI Implementation' card."
 - "Assign @jane.doe to the card 'Implement API Authentication'."
@@ -92,9 +97,10 @@ npm run dev
 npm run qc
 
 ### 🚀 Automated Releases
-This project is configured for automated releases via **GitHub Actions**. Pushing a tag in the format `v*` (e.g., `v1.3.4`) will automatically build, test, and publish the package to **NPM** and create a **GitHub Release**.
+This project is configured for automated releases via **GitHub Actions**. Pushing a tag in the format `v*` (e.g., `v1.3.5`) will automatically build, test, and publish the package to **NPM** and create a **GitHub Release**.
 ```
 
 ---
-*This project focuses exclusively on the MCP interface. For Planka server setup, refer to the [official Planka documentation](https://docs.planka.app).*
-*Developed by [NAVYA TECNOLOGÍA 2024, S.L.](https://www.navyatec.es)*
+
+_This project focuses exclusively on the MCP interface. For Planka server setup, refer to the [official Planka documentation](https://docs.planka.app)._
+_Developed by [NAVYA TECNOLOGÍA 2024, S.L.](https://www.navyatec.es)_
