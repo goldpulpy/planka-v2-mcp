@@ -347,9 +347,9 @@ describe("MCP Kanban Integration Tests", () => {
       taskId = result.id;
     });
 
-    test.skip("should get a task by ID", async () => {
+    test("should get a task by ID", async () => {
       // We need to pass the card ID to get the task
-      const result = await tasks.getTask(taskId);
+      const result = await tasks.getTask(cardId, taskId);
       expect(result).toBeDefined();
       expect(result.id).toBe(taskId);
       expect(result.name).toBe(taskName);
