@@ -1,7 +1,7 @@
 // Global variables to store user IDs
 let adminUserId: string | null = null;
 
-import { getUserIdByEmail, getUserIdByUsername } from "./utils.js";
+import { getUserIdByEmail } from "./utils.js";
 
 /**
  * Gets the admin user ID by looking up the user by email or username

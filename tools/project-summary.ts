@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { getProject, getProjects } from "../operations/projects.js";
-import { getBoards } from "../operations/boards.js";
 import { getBoardSummary } from "./board-summary.js";
 
 /**

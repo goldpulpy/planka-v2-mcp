@@ -184,13 +184,15 @@ registerTool(
         });
         break;
 
-      case "get_project_summary":
-        if (!args.id)
-          throw new Error("id is required for get_project_summary action");
+      case "get_project_summary": {
+        const projectId = args.projectId || args.id;
+        if (!projectId)
+          throw new Error("projectId is required for get_project_summary action");
         result = await getProjectSummary({
-          projectId: args.id,
+          projectId,
         });
         break;
+      }
 
       default:
         throw new Error(`Unknown action: ${args.action}`);
@@ -310,6 +312,10 @@ registerTool(
       .boolean()
       .optional()
       .describe("Whether the card is completed"),
+    isDueCompleted: z
+      .boolean()
+      .optional()
+      .describe("Whether the card due date is completed"),
     isClosed: z
       .boolean()
       .optional()
@@ -348,6 +354,7 @@ registerTool(
           type: (args.type as "project" | "story") || "project",
           description: (args.description as string) || null,
           position: (args.position as number) || 65535,
+          dueDate: args.dueDate,
         });
         break;
 
@@ -370,6 +377,7 @@ registerTool(
             position: args.position,
             dueDate: args.dueDate,
             isCompleted: args.isCompleted,
+            isDueCompleted: args.isDueCompleted,
           });
         }
         break;
@@ -707,8 +715,9 @@ registerTool(
         break;
 
       case "get_one":
-        if (!args.id) throw new Error("id is required for get_one action");
-        result = await tasks.getTask(args.id);
+        if (!args.id || !args.cardId)
+          throw new Error("id and cardId are required for get_one action");
+        result = await tasks.getTask(args.cardId, args.id);
         break;
 
       case "update":
@@ -773,8 +782,9 @@ registerTool(
         break;
 
       case "get_one":
-        if (!args.id) throw new Error("id is required for get_one action");
-        result = await comments.getComment(args.id);
+        if (!args.id || !args.cardId)
+          throw new Error("id and cardId are required for get_one action");
+        result = await comments.getComment(args.cardId, args.id);
         break;
 
       case "update":
@@ -846,7 +856,9 @@ registerTool(
 
       case "get_one":
         if (!args.id) throw new Error("id is required for get_one action");
-        result = await boardMemberships.getBoardMembership(args.id);
+        if (!args.boardId)
+          throw new Error("boardId is required for get_one action");
+        result = await boardMemberships.getBoardMembership(args.boardId, args.id);
         break;
 
       case "update":

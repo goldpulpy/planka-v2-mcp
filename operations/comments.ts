@@ -34,6 +34,7 @@ export const GetCommentsSchema = z.object({
  * @property {string} id - The ID of the comment to retrieve
  */
 export const GetCommentSchema = z.object({
+  cardId: z.string().describe("Card ID"),
   id: z.string().describe("Comment ID"),
 });
 
@@ -117,14 +118,22 @@ export async function getComments(cardId: string) {
 /**
  * Retrieves a specific comment by ID
  *
+ * Planka API: There is no dedicated GET /api/comments/:id endpoint.
+ * Comments are fetched via GET /api/cards/:cardId/comments and filtered by ID.
+ *
+ * @param {string} cardId - The ID of the card the comment belongs to
  * @param {string} id - The ID of the comment
  * @returns {Promise<object>} The requested comment
  */
-export async function getComment(id: string) {
+export async function getComment(cardId: string, id: string) {
   try {
-    const response = await plankaRequest(`/api/comments/${id}`);
-    const parsedResponse = CommentResponseSchema.parse(response);
-    return parsedResponse.item;
+    const response = await plankaRequest(`/api/cards/${cardId}/comments`);
+    const parsedResponse = CommentsResponseSchema.parse(response);
+    const comment = parsedResponse.items.find((c: any) => c.id === id);
+    if (!comment) {
+      throw new Error(`Comment ${id} not found on card ${cardId}`);
+    }
+    return comment;
   } catch (error) {
     throw new Error(
       `Failed to get comment: ${error instanceof Error ? error.message : String(error)}`

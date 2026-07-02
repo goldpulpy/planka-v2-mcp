@@ -3,7 +3,7 @@ import { getCard, moveCard } from "../operations/cards.js";
 import { createComment } from "../operations/comments.js";
 import { getLists } from "../operations/lists.js";
 import { getBoard } from "../operations/boards.js";
-import { getTask, updateTask } from "../operations/tasks.js";
+import { updateTask } from "../operations/tasks.js";
 
 /**
  * Zod schema for the workflow action parameters
@@ -106,18 +106,9 @@ export async function performWorkflowAction(params: WorkflowActionParams) {
                 if (taskIds && taskIds.length > 0) {
                     // Mark all specified tasks as completed
                     const taskUpdates = await Promise.all(
-                        taskIds.map(async (taskId) => {
-                            // First get the task to get its current properties
-                            const task = await getTask(taskId);
-
-                            // Then update it with the same properties plus isCompleted=true
-                            return updateTask(taskId, {
-                                name: task.name,
-                                position: task.position,
-                                // Use the API's method for marking as completed
-                                // The updateTask function will handle this correctly
-                            });
-                        }),
+                        taskIds.map((taskId) =>
+                            updateTask(taskId, { isCompleted: true }),
+                        ),
                     );
 
                     // Add a comment if provided

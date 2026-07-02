@@ -33,17 +33,20 @@ const CardMembershipsResponseSchema = z.array(CardMembershipSchema);
 
 /**
  * Retrieves all memberships for a specific card
+ *
+ * Planka API: Card memberships are included in the card response under `included.cardMemberships`.
+ * There is no dedicated listing endpoint.
  */
 export async function getCardMemberships(cardId: string) {
   try {
-    const response = await plankaRequest(`/api/cards/${cardId}/card-memberships`);
-    // Note: Some Planka versions return an object with items, others return an array.
-    // Let's handle both.
-    if (Array.isArray(response)) {
-      return CardMembershipsResponseSchema.parse(response);
+    const response = await plankaRequest(`/api/cards/${cardId}`);
+    if (response && typeof response === "object") {
+      const included = (response as any).included;
+      if (included && Array.isArray(included.cardMemberships)) {
+        return CardMembershipsResponseSchema.parse(included.cardMemberships);
+      }
     }
-    const { items } = response as { items: any[] };
-    return CardMembershipsResponseSchema.parse(items);
+    return [];
   } catch (error) {
     throw new Error(`Failed to get card memberships for ${cardId}: ${error instanceof Error ? error.message : String(error)}`);
   }
