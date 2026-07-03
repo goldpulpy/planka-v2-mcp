@@ -204,7 +204,10 @@ export async function createBoard(options: CreateBoardOptions) {
         });
       }
     } catch (error) {
-      console.error("Error adding admin user as board member:", error);
+      const message = error instanceof Error ? error.message : String(error);
+      if (!message.includes("User already board member")) {
+        console.error("Error adding admin user as board member:", error);
+      }
     }
 
     // Create default lists and labels
