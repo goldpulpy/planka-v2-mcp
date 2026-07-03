@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { getCard } from "../operations/cards.js";
+import { getCardWithIncluded } from "../operations/cards.js";
 import { getTasks } from "../operations/tasks.js";
 import { getComments } from "../operations/comments.js";
-import { getLabels } from "../operations/labels.js";
 import { getProjects } from "../operations/projects.js";
 import { getBoards } from "../operations/boards.js";
 import { getLists } from "../operations/lists.js";
+import { plankaRequest } from "../common/utils.js";
 
 /**
  * Zod schema for the getCardDetails function parameters
@@ -37,7 +37,8 @@ export async function getCardDetails(params: GetCardDetailsParams) {
 
     try {
         // Get the card details
-        const card = await getCard(cardId);
+        const cardResponse = await getCardWithIncluded(cardId);
+        const card = cardResponse.item;
 
         if (!card) {
             throw new Error(`Card with ID ${cardId} not found`);
@@ -84,12 +85,22 @@ export async function getCardDetails(params: GetCardDetailsParams) {
             throw new Error(`Could not determine board ID for card ${cardId}`);
         }
 
-        const labels = await getLabels(boardId);
-
-        // Filter to just the labels assigned to this card
-        // Note: We need to get the labelIds from the card's data
-        // This might require additional API calls or data structure knowledge
-        // For now, we'll return all labels for the board
+        const boardResponse = await plankaRequest(`/api/boards/${boardId}`);
+        const included = (boardResponse as any).included || cardResponse.included || {};
+        const boardLabels = Array.isArray(included.labels)
+            ? included.labels
+            : [];
+        const cardLabels = Array.isArray(included.cardLabels)
+            ? included.cardLabels
+            : [];
+        const assignedLabelIds = new Set(
+            cardLabels
+                .filter((cardLabel: any) => cardLabel.cardId === card.id)
+                .map((cardLabel: any) => cardLabel.labelId),
+        );
+        const labels = boardLabels.filter((label: any) =>
+            assignedLabelIds.has(label.id)
+        );
 
         // Calculate task completion percentage
         const completedTasks = tasks.filter((task: any) =>

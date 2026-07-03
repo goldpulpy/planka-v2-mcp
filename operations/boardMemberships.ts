@@ -69,11 +69,6 @@ export type CreateBoardMembershipOptions = z.infer<typeof CreateBoardMembershipS
 export type UpdateBoardMembershipOptions = z.infer<typeof UpdateBoardMembershipSchema>;
 
 // Response schemas
-const BoardMembershipsResponseSchema = z.object({
-  items: z.array(PlankaBoardMembershipSchema),
-  included: z.record(z.any()).optional(),
-});
-
 const BoardMembershipResponseSchema = z.object({
   item: PlankaBoardMembershipSchema,
   included: z.record(z.any()).optional(),
@@ -149,16 +144,20 @@ export async function getBoardMemberships(boardId: string, _projectId?: string) 
  * @param {string} id - The ID of the board membership
  * @returns {Promise<object>} The requested board membership
  */
-export async function getBoardMembership(id: string) {
-  try {
-    const response = await plankaRequest(`/api/board-memberships/${id}`);
-    const parsedResponse = BoardMembershipResponseSchema.parse(response);
-    return parsedResponse.item;
-  } catch (error) {
-    throw new Error(
-      `Failed to get board membership: ${error instanceof Error ? error.message : String(error)}`
+export async function getBoardMembership(boardId: string, id: string) {
+  const response = await plankaRequest(`/api/boards/${boardId}`);
+
+  if (response && typeof response === "object" && (response as any).included && (response as any).included.boardMemberships) {
+    const memberships = (response as any).included.boardMemberships;
+    const membership = memberships.find(
+      (m: any) => m.id === id,
     );
+    if (membership) {
+      return membership;
+    }
   }
+
+  return null;
 }
 
 /**

@@ -60,7 +60,7 @@ export async function createCardWithTasks(params: CreateCardWithTasksParams) {
             listId,
             name,
             type: "project",
-            description: description || "",
+            description: description || null,
             position,
         });
 

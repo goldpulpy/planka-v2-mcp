@@ -57,6 +57,7 @@ export const GetTaskListTasksSchema = z.object({
  * @property {string} id - The ID of the task to retrieve
  */
 export const GetTaskSchema = z.object({
+  cardId: z.string().describe("Card ID"),
   id: z.string().describe("Task ID"),
 });
 
@@ -222,22 +223,20 @@ export async function getTasks(cardId: string) {
 /**
  * Retrieves a specific task by ID
  *
+ * Planka API: There is no dedicated GET /api/tasks/:id endpoint.
+ * Tasks are fetched by scanning all task lists on the card's GET response.
+ *
+ * @param {string} cardId - The ID of the card the task belongs to
  * @param {string} id - The ID of the task to retrieve
  * @returns {Promise<object>} The requested task
  */
-export async function getTask(id: string) {
+export async function getTask(cardId: string, id: string) {
   try {
-    const response = await plankaRequest(`/api/tasks/${id}`);
-    
-    // Check if the response is wrapped in 'item' or is the item itself
-    if (response && typeof response === "object") {
-        if ("item" in response && (response as any).item) {
-            return (response as any).item;
-        }
-        return response; // Assume it's the item directly
-    }
-    
-    throw new Error("Invalid task response format");
+    const tasks = await getTasks(cardId);
+    const task = tasks.find((task: any) => task.id === id);
+    if (task) return task;
+
+    throw new Error(`Task ${id} not found on card ${cardId}`);
   } catch (error) {
     throw new Error(
       `Failed to get task: ${error instanceof Error ? error.message : String(error)}`
@@ -286,4 +285,3 @@ export async function deleteTask(id: string) {
     );
   }
 }
-

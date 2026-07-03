@@ -8,7 +8,7 @@
 
 import { z } from "zod";
 import { plankaRequest } from "../common/utils.js";
-import { PlankaCardSchema, PlankaStopwatchSchema } from "../common/types.js";
+import { PlankaCardSchema } from "../common/types.js";
 
 // Schema definitions
 /**
@@ -24,6 +24,7 @@ export const CreateCardSchema = z.object({
   type: z.enum(["project", "story"]).optional().default("project").describe("Card type (project or story)"),
   description: z.string().nullable().optional().describe("Card description"),
   position: z.number().optional().describe("Card position (default: 65535)"),
+  dueDate: z.string().nullable().optional().describe("Card due date (ISO format)"),
 });
 
 /**
@@ -60,6 +61,7 @@ export const UpdateCardSchema = z.object({
   position: z.number().optional().describe("Card position"),
   dueDate: z.string().optional().describe("Card due date (ISO format)"),
   isCompleted: z.boolean().optional().describe("Whether the card is completed"),
+  isDueCompleted: z.boolean().optional().describe("Whether the card due date is completed"),
   isClosed: z.boolean().optional().describe("Whether the card is closed"),
 });
 
@@ -143,6 +145,7 @@ export async function createCard(options: CreateCardOptions) {
           type: options.type,
           description: options.description,
           position: options.position ?? 65535,
+          dueDate: options.dueDate,
         },
       },
     );
@@ -186,7 +189,18 @@ export async function getCard(id: string) {
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to get card: ${error instanceof Error ? error.message : String(error)}`
+      "Failed to get card: " + (error instanceof Error ? error.message : String(error))
+    );
+  }
+}
+
+export async function getCardWithIncluded(id: string) {
+  try {
+    const response = await plankaRequest(`/api/cards/${id}`);
+    return CardResponseSchema.parse(response);
+  } catch (error) {
+    throw new Error(
+      "Failed to get card: " + (error instanceof Error ? error.message : String(error))
     );
   }
 }
@@ -203,9 +217,15 @@ export async function updateCard(
   options: Partial<Omit<UpdateCardOptions, "id">>,
 ) {
   try {
+    const body: Record<string, unknown> = { ...options };
+    if (body.isCompleted !== undefined && body.isDueCompleted === undefined) {
+      body.isDueCompleted = body.isCompleted;
+    }
+    delete body.isCompleted;
+
     const response = await plankaRequest(`/api/cards/${id}`, {
       method: "PATCH",
-      body: options,
+      body,
     });
     const parsedResponse = CardResponseSchema.parse(response);
     return parsedResponse.item;
@@ -271,7 +291,7 @@ export async function duplicateCard(id: string, position?: number) {
       listId: originalCard.listId,
       name: `Copy of ${originalCard.name}`,
       type: originalCard.type,
-      description: originalCard.description || "",
+      description: originalCard.description ?? null,
       position: position || 65535,
     });
 

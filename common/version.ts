@@ -1,2 +1,2 @@
 // Version of the MCP Kanban server
-export const VERSION = "1.3.4";
+export const VERSION = "1.3.5";
