@@ -34,7 +34,7 @@
     "format": "biome format .",
     "format:fix": "biome format --write .",
     "typecheck": "tsc --noEmit",
-    "qc": "npm run typecheck && npm run lint && npm run build",
+    "qc": "npm run typecheck && npm run lint && npm run build && npm run test",
     "prepublishOnly": "npm run qc"
   },
   "dependencies": {
