@@ -28,13 +28,19 @@ Run the full check suite before opening a pull request:
 npm run qc
 ```
 
-and integration tests:
-
-```bash
-npm run test:integration
-```
-
 This runs type checking, Biome linting, build, and Jest tests. For targeted work, use `npm run typecheck`, `npm run lint`, `npm run format`, or `npm test`.
+
+## Integration Tests
+
+`npm run test:integration` requires a running Planka v2 instance.
+
+1. Start a local Planka instance (e.g. via Docker: `docker run -p 3000:1337 ghcr.io/plankanban/planka`)
+   or point to an existing test instance.
+2. Set the corresponding `PLANKA_*` variables in `.env` (see `.env.example`).
+3. Run `npm run test:integration`.
+
+Skip this step for documentation-only or unit-test-only changes — unit tests
+(`npm test`) do not require a live Planka instance.
 
 ## Project Layout
 
@@ -46,7 +52,11 @@ This runs type checking, Biome linting, build, and Jest tests. For targeted work
 
 ## Pull Requests
 
-Keep pull requests focused. Include a short description, linked issue when applicable, and the result of `npm run qc`. Add or update tests when behavior changes. Documentation-only changes should still be checked for accuracy against the current scripts and Planka v2 behavior.
+Keep pull requests focused. Include a short description, linked issue when
+applicable, and the result of `npm run qc`. Run `npm run test:integration`
+as well if your change touches Planka API calls. Add or update tests when
+behavior changes. Documentation-only changes should still be checked for
+accuracy against the current scripts and Planka v2 behavior.
 
 ## Commit Messages
 

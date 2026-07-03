@@ -191,7 +191,7 @@ The core config block is always:
 ```json
 {
   "command": "node",
-  "args": ["/absolute/path/to/kanban-mcp/dist/index.js"],
+  "args": ["/absolute/path/to/planka-v2-mcp/dist/index.js"],
   "env": {
     "PLANKA_BASE_URL": "https://your-planka-instance.com",
     "PLANKA_AGENT_EMAIL": "agent@yourdomain.com",
