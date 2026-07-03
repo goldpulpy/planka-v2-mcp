@@ -6,8 +6,8 @@
  */
 
 import { z } from "zod";
-import { plankaRequest } from "../common/utils.js";
 import { PlankaTaskListSchema } from "../common/types.js";
+import { plankaRequest } from "../common/utils.js";
 
 // Schema definitions
 /**
@@ -55,7 +55,7 @@ export type CreateTaskListOptions = z.infer<typeof CreateTaskListSchema>;
 export type UpdateTaskListOptions = z.infer<typeof UpdateTaskListSchema>;
 
 // Response schemas
-const TaskListsResponseSchema = z.object({
+const _TaskListsResponseSchema = z.object({
   items: z.array(PlankaTaskListSchema),
   included: z.record(z.any()).optional(),
 });
@@ -74,21 +74,18 @@ const TaskListResponseSchema = z.object({
  */
 export async function createTaskList(options: CreateTaskListOptions) {
   try {
-    const response = await plankaRequest(
-      `/api/cards/${options.cardId}/task-lists`,
-      {
-        method: "POST",
-        body: {
-          name: options.name,
-          position: options.position ?? 65535,
-        },
+    const response = await plankaRequest(`/api/cards/${options.cardId}/task-lists`, {
+      method: "POST",
+      body: {
+        name: options.name,
+        position: options.position ?? 65535,
       },
-    );
+    });
     const parsedResponse = TaskListResponseSchema.parse(response);
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to create task list: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to create task list: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -102,11 +99,11 @@ export async function createTaskList(options: CreateTaskListOptions) {
 export async function getTaskLists(cardId: string) {
   try {
     const response = await plankaRequest(`/api/cards/${cardId}`);
-    
-    if (response && typeof response === "object" && (response as any).included && (response as any).included.taskLists) {
+
+    if (response && typeof response === "object" && (response as any).included?.taskLists) {
       return (response as any).included.taskLists;
     }
-    
+
     return [];
   } catch (error) {
     console.error(`Error getting task lists for card ${cardId}:`, error);
@@ -127,7 +124,7 @@ export async function getTaskList(id: string) {
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to get task list: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to get task list: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -139,7 +136,10 @@ export async function getTaskList(id: string) {
  * @param {Partial<Omit<UpdateTaskListOptions, "id">>} options - Properties to update
  * @returns {Promise<object>} The updated task list
  */
-export async function updateTaskList(id: string, options: Partial<Omit<UpdateTaskListOptions, "id">>) {
+export async function updateTaskList(
+  id: string,
+  options: Partial<Omit<UpdateTaskListOptions, "id">>,
+) {
   try {
     const response = await plankaRequest(`/api/task-lists/${id}`, {
       method: "PATCH",
@@ -149,7 +149,7 @@ export async function updateTaskList(id: string, options: Partial<Omit<UpdateTas
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to update task list: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to update task list: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -168,7 +168,7 @@ export async function deleteTaskList(id: string) {
     return { success: true };
   } catch (error) {
     throw new Error(
-      `Failed to delete task list: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to delete task list: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }

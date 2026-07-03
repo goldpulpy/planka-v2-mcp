@@ -9,10 +9,12 @@
  * - PLANKA_BASE_URL
  * - PLANKA_AGENT_EMAIL
  * - PLANKA_AGENT_PASSWORD
- * - PLANKA_ADMIN_EMAIL or PLANKA_ADMIN_USERNAME
  */
 
 import { afterAll, describe, expect, jest, test } from "@jest/globals";
+// Import utilities for direct API calls
+import { getAdminUserId } from "../common/setup.js";
+import { plankaRequest } from "../common/utils.js";
 import * as boardMemberships from "../operations/boardMemberships.js";
 import * as boards from "../operations/boards.js";
 import * as cards from "../operations/cards.js";
@@ -21,17 +23,8 @@ import * as labels from "../operations/labels.js";
 import * as lists from "../operations/lists.js";
 import * as projects from "../operations/projects.js";
 import * as tasks from "../operations/tasks.js";
-
 // Import custom tools
-import {
-  createCardWithTasks,
-  getBoardSummary,
-  getCardDetails,
-} from "../tools/index.js";
-
-// Import utilities for direct API calls
-import { getAdminUserId } from "../common/setup.js";
-import { plankaRequest } from "../common/utils.js";
+import { createCardWithTasks, getBoardSummary, getCardDetails } from "../tools/index.js";
 
 // Test data
 const testPrefix = `test-${Date.now()}`;
@@ -66,7 +59,7 @@ async function deleteProject(id: string) {
   });
 }
 
-describe("MCP Kanban Integration Tests", () => {
+describe("MCP Planka Integration Tests", () => {
   // Test getAdminUserId function
   describe("Admin User Setup", () => {
     test("should get admin user ID", async () => {
@@ -436,9 +429,7 @@ describe("MCP Kanban Integration Tests", () => {
   // Board membership tests
   describe("Board Membership Operations", () => {
     test("should get board memberships", async () => {
-      const response: any[] = await boardMemberships.getBoardMemberships(
-        boardId
-      );
+      const response: any[] = await boardMemberships.getBoardMemberships(boardId);
       expect(response).toBeDefined();
       expect(Array.isArray(response)).toBe(true);
     });

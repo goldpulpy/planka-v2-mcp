@@ -13,44 +13,44 @@ import { getUserIdByEmail } from "./utils.js";
  * 4. Look up the admin user ID by username using PLANKA_ADMIN_USERNAME
  */
 export async function getAdminUserId(): Promise<string | null> {
-    if (adminUserId) {
+  if (adminUserId) {
+    return adminUserId;
+  }
+
+  try {
+    // Check for direct admin ID (for backwards compatibility)
+    const directAdminId = process.env.PLANKA_ADMIN_ID;
+    if (directAdminId) {
+      adminUserId = directAdminId;
+      return adminUserId;
+    }
+
+    // Try to get the admin ID by email
+    const adminEmail = process.env.PLANKA_ADMIN_EMAIL;
+    if (adminEmail) {
+      const id = await getUserIdByEmail(adminEmail);
+      if (id) {
+        adminUserId = id;
         return adminUserId;
+      }
     }
 
-    try {
-        // Check for direct admin ID (for backwards compatibility)
-        const directAdminId = process.env.PLANKA_ADMIN_ID;
-        if (directAdminId) {
-            adminUserId = directAdminId;
-            return adminUserId;
-        }
-
-        // Try to get the admin ID by email
-        const adminEmail = process.env.PLANKA_ADMIN_EMAIL;
-        if (adminEmail) {
-            const id = await getUserIdByEmail(adminEmail);
-            if (id) {
-                adminUserId = id;
-                return adminUserId;
-            }
-        }
-
-        // Fallback to agent email
-        const agentEmail = process.env.PLANKA_AGENT_EMAIL;
-        if (agentEmail) {
-            const id = await getUserIdByEmail(agentEmail);
-            if (id) {
-                adminUserId = id;
-                return adminUserId;
-            }
-        }
-
-        console.error(
-            "Could not determine admin user ID. Please set PLANKA_ADMIN_ID, PLANKA_ADMIN_EMAIL, PLANKA_ADMIN_USERNAME, or PLANKA_AGENT_EMAIL.",
-        );
-        return null;
-    } catch (error) {
-        console.error("Failed to get admin user ID:", error);
-        return null;
+    // Fallback to agent email
+    const agentEmail = process.env.PLANKA_AGENT_EMAIL;
+    if (agentEmail) {
+      const id = await getUserIdByEmail(agentEmail);
+      if (id) {
+        adminUserId = id;
+        return adminUserId;
+      }
     }
+
+    console.error(
+      "Could not determine admin user ID. Please set PLANKA_ADMIN_ID, PLANKA_ADMIN_EMAIL, PLANKA_ADMIN_USERNAME, or PLANKA_AGENT_EMAIL.",
+    );
+    return null;
+  } catch (error) {
+    console.error("Failed to get admin user ID:", error);
+    return null;
+  }
 }

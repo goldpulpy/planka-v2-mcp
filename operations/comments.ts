@@ -7,8 +7,8 @@
  */
 
 import { z } from "zod";
-import { plankaRequest } from "../common/utils.js";
 import { PlankaCommentSchema } from "../common/types.js";
+import { plankaRequest } from "../common/utils.js";
 
 // Schema definitions
 /**
@@ -80,20 +80,17 @@ const CommentResponseSchema = z.object({
  */
 export async function createComment(options: CreateCommentOptions) {
   try {
-    const response = await plankaRequest(
-      `/api/cards/${options.cardId}/comments`,
-      {
-        method: "POST",
-        body: {
-          text: options.text,
-        },
+    const response = await plankaRequest(`/api/cards/${options.cardId}/comments`, {
+      method: "POST",
+      body: {
+        text: options.text,
       },
-    );
+    });
     const parsedResponse = CommentResponseSchema.parse(response);
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to create comment: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to create comment: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -136,7 +133,7 @@ export async function getComment(cardId: string, id: string) {
     return comment;
   } catch (error) {
     throw new Error(
-      `Failed to get comment: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to get comment: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -163,7 +160,7 @@ export async function updateComment(
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to update comment: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to update comment: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -182,8 +179,7 @@ export async function deleteComment(id: string) {
     return { success: true };
   } catch (error) {
     throw new Error(
-      `Failed to delete comment: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to delete comment: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
-

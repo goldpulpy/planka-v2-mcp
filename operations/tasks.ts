@@ -7,8 +7,8 @@
  */
 
 import { z } from "zod";
-import { plankaRequest } from "../common/utils.js";
 import { PlankaTaskSchema } from "../common/types.js";
+import { plankaRequest } from "../common/utils.js";
 import * as taskLists from "./taskLists.js";
 
 // Schema definitions
@@ -19,14 +19,16 @@ import * as taskLists from "./taskLists.js";
  * @property {string} name - The name of the task
  * @property {number} [position] - The position of the task in the list (default: 65535)
  */
-export const CreateTaskSchema = z.object({
-  cardId: z.string().optional().describe("Card ID (v1 compatibility, will use first Task List)"),
-  taskListId: z.string().optional().describe("Task List ID (v2 preferred)"),
-  name: z.string().describe("Task name"),
-  position: z.number().optional().describe("Task position (default: 65535)"),
-}).refine(data => data.cardId || data.taskListId, {
-  message: "Either cardId or taskListId must be provided",
-});
+export const CreateTaskSchema = z
+  .object({
+    cardId: z.string().optional().describe("Card ID (v1 compatibility, will use first Task List)"),
+    taskListId: z.string().optional().describe("Task List ID (v2 preferred)"),
+    name: z.string().describe("Task name"),
+    position: z.number().optional().describe("Task position (default: 65535)"),
+  })
+  .refine((data) => data.cardId || data.taskListId, {
+    message: "Either cardId or taskListId must be provided",
+  });
 
 /**
  * Schema for batch creating multiple tasks
@@ -89,7 +91,7 @@ export type BatchCreateTasksOptions = z.infer<typeof BatchCreateTasksSchema>;
 export type UpdateTaskOptions = z.infer<typeof UpdateTaskSchema>;
 
 // Response schemas
-const TasksResponseSchema = z.object({
+const _TasksResponseSchema = z.object({
   items: z.array(PlankaTaskSchema),
   included: z.record(z.any()).optional(),
 });
@@ -129,22 +131,19 @@ export async function createTask(options: CreateTaskOptions) {
       throw new Error("Target Task List ID could not be determined.");
     }
 
-    const response = await plankaRequest(
-      `/api/task-lists/${targetTaskListId}/tasks`,
-      {
-        method: "POST",
-        body: {
-          name: options.name,
-          position: options.position || 65535,
-        },
+    const response = await plankaRequest(`/api/task-lists/${targetTaskListId}/tasks`, {
+      method: "POST",
+      body: {
+        name: options.name,
+        position: options.position || 65535,
       },
-    );
+    });
 
     const parsedResponse = TaskResponseSchema.parse(response);
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to create task: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to create task: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -162,6 +161,7 @@ export async function batchCreateTasks(options: BatchCreateTasksOptions) {
 
   for (let i = 0; i < options.tasks.length; i++) {
     const task = options.tasks[i];
+    if (!task) continue;
     try {
       const result = await createTask(task);
       results.push({ success: true, result });
@@ -185,11 +185,11 @@ export async function batchCreateTasks(options: BatchCreateTasksOptions) {
 export async function getTaskListTasks(taskListId: string) {
   try {
     const response = await plankaRequest(`/api/task-lists/${taskListId}`);
-    
-    if (response && typeof response === "object" && (response as any).included && (response as any).included.tasks) {
+
+    if (response && typeof response === "object" && (response as any).included?.tasks) {
       return (response as any).included.tasks;
     }
-    
+
     return [];
   } catch (error) {
     console.error(`Error getting tasks for task list ${taskListId}:`, error);
@@ -239,7 +239,7 @@ export async function getTask(cardId: string, id: string) {
     throw new Error(`Task ${id} not found on card ${cardId}`);
   } catch (error) {
     throw new Error(
-      `Failed to get task: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to get task: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -262,7 +262,7 @@ export async function updateTask(id: string, options: Partial<UpdateTaskOptions>
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to update task: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to update task: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -281,7 +281,7 @@ export async function deleteTask(id: string) {
     return { success: true };
   } catch (error) {
     throw new Error(
-      `Failed to delete task: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to delete task: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }

@@ -7,8 +7,8 @@
  */
 
 import { z } from "zod";
-import { plankaRequest } from "../common/utils.js";
 import { PlankaCardSchema } from "../common/types.js";
+import { plankaRequest } from "../common/utils.js";
 
 // Schema definitions
 /**
@@ -21,7 +21,11 @@ import { PlankaCardSchema } from "../common/types.js";
 export const CreateCardSchema = z.object({
   listId: z.string().describe("List ID"),
   name: z.string().describe("Card name"),
-  type: z.enum(["project", "story"]).optional().default("project").describe("Card type (project or story)"),
+  type: z
+    .enum(["project", "story"])
+    .optional()
+    .default("project")
+    .describe("Card type (project or story)"),
   description: z.string().nullable().optional().describe("Card description"),
   position: z.number().optional().describe("Card position (default: 65535)"),
   dueDate: z.string().nullable().optional().describe("Card due date (ISO format)"),
@@ -68,16 +72,12 @@ export const UpdateCardSchema = z.object({
 export const MoveCardSchema = z.object({
   id: z.string().describe("Card ID"),
   listId: z.string().describe("Target list ID"),
-  position: z.number().optional().describe(
-    "Card position in the target list (default: 65535)",
-  ),
+  position: z.number().optional().describe("Card position in the target list (default: 65535)"),
 });
 
 export const DuplicateCardSchema = z.object({
   id: z.string().describe("Card ID to duplicate"),
-  position: z.number().optional().describe(
-    "Position for the duplicated card (default: 65535)",
-  ),
+  position: z.number().optional().describe("Position for the duplicated card (default: 65535)"),
 });
 
 export const DeleteCardSchema = z.object({
@@ -106,14 +106,10 @@ export type CreateCardOptions = z.infer<typeof CreateCardSchema>;
 export type UpdateCardOptions = z.infer<typeof UpdateCardSchema>;
 export type MoveCardOptions = z.infer<typeof MoveCardSchema>;
 export type DuplicateCardOptions = z.infer<typeof DuplicateCardSchema>;
-export type StartCardStopwatchOptions = z.infer<
-  typeof StartCardStopwatchSchema
->;
+export type StartCardStopwatchOptions = z.infer<typeof StartCardStopwatchSchema>;
 export type StopCardStopwatchOptions = z.infer<typeof StopCardStopwatchSchema>;
 export type GetCardStopwatchOptions = z.infer<typeof GetCardStopwatchSchema>;
-export type ResetCardStopwatchOptions = z.infer<
-  typeof ResetCardStopwatchSchema
->;
+export type ResetCardStopwatchOptions = z.infer<typeof ResetCardStopwatchSchema>;
 
 // Response schemas
 const CardsResponseSchema = z.object({
@@ -136,25 +132,21 @@ const CardResponseSchema = z.object({
  */
 export async function createCard(options: CreateCardOptions) {
   try {
-    const response = await plankaRequest(
-      `/api/lists/${options.listId}/cards`,
-      {
-        method: "POST",
-        body: {
-          name: options.name,
-          type: options.type,
-          description: options.description,
-          position: options.position ?? 65535,
-          dueDate: options.dueDate,
-        },
+    const response = await plankaRequest(`/api/lists/${options.listId}/cards`, {
+      method: "POST",
+      body: {
+        name: options.name,
+        type: options.type,
+        description: options.description,
+        position: options.position ?? 65535,
+        dueDate: options.dueDate,
       },
-    );
+    });
     const parsedResponse = CardResponseSchema.parse(response);
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to create card: ${error instanceof Error ? error.message : String(error)
-      }`,
+      `Failed to create card: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -189,7 +181,7 @@ export async function getCard(id: string) {
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      "Failed to get card: " + (error instanceof Error ? error.message : String(error))
+      `Failed to get card: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -200,7 +192,7 @@ export async function getCardWithIncluded(id: string) {
     return CardResponseSchema.parse(response);
   } catch (error) {
     throw new Error(
-      "Failed to get card: " + (error instanceof Error ? error.message : String(error))
+      `Failed to get card: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -212,10 +204,7 @@ export async function getCardWithIncluded(id: string) {
  * @param {Partial<Omit<UpdateCardOptions, "id">>} options - The properties to update
  * @returns {Promise<object>} The updated card
  */
-export async function updateCard(
-  id: string,
-  options: Partial<Omit<UpdateCardOptions, "id">>,
-) {
+export async function updateCard(id: string, options: Partial<Omit<UpdateCardOptions, "id">>) {
   try {
     const body: Record<string, unknown> = { ...options };
     if (body.isCompleted !== undefined && body.isDueCompleted === undefined) {
@@ -231,7 +220,7 @@ export async function updateCard(
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to update card: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to update card: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -270,8 +259,7 @@ export async function moveCard(
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to move card: ${error instanceof Error ? error.message : String(error)
-      }`,
+      `Failed to move card: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -298,8 +286,7 @@ export async function duplicateCard(id: string, position?: number) {
     return newCard;
   } catch (error) {
     throw new Error(
-      `Failed to duplicate card: ${error instanceof Error ? error.message : String(error)
-      }`,
+      `Failed to duplicate card: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -318,7 +305,7 @@ export async function deleteCard(id: string) {
     return { success: true };
   } catch (error) {
     throw new Error(
-      `Failed to delete card: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to delete card: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -354,11 +341,13 @@ export async function archiveCard(id: string) {
       },
     });
 
-    const parsedResponse = CardResponseSchema.parse((response as any).item ? response : { item: response });
+    const parsedResponse = CardResponseSchema.parse(
+      (response as any).item ? response : { item: response },
+    );
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to archive card: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to archive card: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -388,7 +377,7 @@ export async function startCardStopwatch(id: string) {
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to start card stopwatch: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to start card stopwatch: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -399,12 +388,12 @@ export async function stopCardStopwatch(id: string) {
     const card = await getCard(id);
     const existingTotal = card.stopwatch?.total || 0;
     let newTotal = existingTotal;
-    
+
     if (card.stopwatch?.startedAt) {
-        const startedAt = new Date(card.stopwatch.startedAt).getTime();
-        const now = new Date().getTime();
-        const elapsed = Math.floor((now - startedAt) / 1000);
-        newTotal += elapsed;
+      const startedAt = new Date(card.stopwatch.startedAt).getTime();
+      const now = Date.now();
+      const elapsed = Math.floor((now - startedAt) / 1000);
+      newTotal += elapsed;
     }
 
     const response = await plankaRequest(`/api/cards/${id}`, {
@@ -421,7 +410,7 @@ export async function stopCardStopwatch(id: string) {
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to stop card stopwatch: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to stop card stopwatch: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -451,7 +440,7 @@ export async function getCardStopwatch(id: string) {
 
     if (isRunning && card.stopwatch.startedAt) {
       const startedAt = new Date(card.stopwatch.startedAt).getTime();
-      const now = new Date().getTime();
+      const now = Date.now();
       currentElapsed = Math.floor((now - startedAt) / 1000);
     }
 
@@ -465,7 +454,7 @@ export async function getCardStopwatch(id: string) {
     };
   } catch (error) {
     throw new Error(
-      `Failed to get card stopwatch: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to get card stopwatch: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -486,7 +475,7 @@ export async function resetCardStopwatch(id: string) {
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to reset card stopwatch: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to reset card stopwatch: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -509,4 +498,3 @@ function formatDuration(seconds: number): string {
 
   return result.trim();
 }
-

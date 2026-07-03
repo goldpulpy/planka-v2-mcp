@@ -71,21 +71,13 @@ export function createPlankaError(status: number, response: any): PlankaError {
     case 409:
       return new PlankaConflictError(response?.message || "Conflict occurred");
     case 422:
-      return new PlankaValidationError(
-        response?.message || "Validation failed",
-        status,
-        response,
-      );
+      return new PlankaValidationError(response?.message || "Validation failed", status, response);
     case 429:
       return new PlankaRateLimitError(
         response?.message,
         new Date(response?.reset_at || Date.now() + 60000),
       );
     default:
-      return new PlankaError(
-        response?.message || "Planka API error",
-        status,
-        response,
-      );
+      return new PlankaError(response?.message || "Planka API error", status, response);
   }
 }

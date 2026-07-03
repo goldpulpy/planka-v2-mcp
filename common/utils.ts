@@ -33,8 +33,7 @@ export function buildUrl(
   return url.toString();
 }
 
-const USER_AGENT =
-  `modelcontextprotocol/servers/planka/v${VERSION} ${getUserAgent()}`;
+const USER_AGENT = `modelcontextprotocol/servers/planka/v${VERSION} ${getUserAgent()}`;
 
 async function authenticateAgent(): Promise<string> {
   const email = process.env.PLANKA_AGENT_EMAIL;
@@ -48,9 +47,7 @@ async function authenticateAgent(): Promise<string> {
 
   const baseUrl = process.env.PLANKA_BASE_URL || "http://localhost:3000";
   // Normalize the base URL to not end with /api
-  const normalizedBaseUrl = baseUrl.endsWith("/api")
-    ? baseUrl.slice(0, -4)
-    : baseUrl;
+  const normalizedBaseUrl = baseUrl.endsWith("/api") ? baseUrl.slice(0, -4) : baseUrl;
 
   const url = new URL("/api/access-tokens", normalizedBaseUrl).toString();
 
@@ -58,7 +55,7 @@ async function authenticateAgent(): Promise<string> {
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        "Accept": "application/json",
+        Accept: "application/json",
         "Content-Type": "application/json",
         "User-Agent": USER_AGENT,
       },
@@ -82,9 +79,7 @@ async function authenticateAgent(): Promise<string> {
   } catch (error: unknown) {
     // Rethrow with more context
     const errorMessage = error instanceof Error ? error.message : String(error);
-    throw new Error(
-      `Failed to authenticate agent with Planka: ${errorMessage}`,
-    );
+    throw new Error(`Failed to authenticate agent with Planka: ${errorMessage}`);
   }
 }
 
@@ -95,32 +90,29 @@ async function getAuthToken(): Promise<string> {
   return authenticateAgent();
 }
 
-export async function plankaRequest(
-  path: string,
-  options: RequestOptions = {},
-): Promise<unknown> {
+export async function plankaRequest(path: string, options: RequestOptions = {}): Promise<unknown> {
   const baseUrl = process.env.PLANKA_BASE_URL || "http://localhost:3000";
 
   // Normalize the base URL to not end with /api
-  const normalizedBaseUrl = baseUrl.endsWith("/api")
-    ? baseUrl.slice(0, -4)
-    : baseUrl;
+  const normalizedBaseUrl = baseUrl.endsWith("/api") ? baseUrl.slice(0, -4) : baseUrl;
 
   // Ensure path starts with /api/
   const normalizedPath = path.startsWith("/api/") ? path : `/api/${path}`;
 
   const urlObj = new URL(normalizedPath, normalizedBaseUrl);
-  
+
   // SSRF Protection: Ensure we don't accidentally redirect to a different host via normalizedPath
   const baseHost = new URL(normalizedBaseUrl).host;
   if (urlObj.host !== baseHost) {
-    throw new Error(`Security violation: Target host ${urlObj.host} does not match base host ${baseHost}`);
+    throw new Error(
+      `Security violation: Target host ${urlObj.host} does not match base host ${baseHost}`,
+    );
   }
 
   const url = urlObj.toString();
 
   const headers: Record<string, string> = {
-    "Accept": "application/json",
+    Accept: "application/json",
     "Content-Type": "application/json",
     "User-Agent": USER_AGENT,
     ...options.headers,
@@ -135,18 +127,16 @@ export async function plankaRequest(
   if (!options.skipAuth) {
     try {
       const token = await getAuthToken();
-      headers["Authorization"] = `Bearer ${token}`;
+      headers.Authorization = `Bearer ${token}`;
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error
-        ? error.message
-        : String(error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
       throw new Error(`Failed to get authentication token: ${errorMessage}`);
     }
   }
 
   // Handle SSL certificate verification bypass for internal networks
   if (process.env.PLANKA_IGNORE_SSL === "true") {
-    // Note: Setting this globally affects the whole process, but it's a common 
+    // Note: Setting this globally affects the whole process, but it's a common
     // workaround for internal servers with self-signed certs.
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
   }
@@ -155,11 +145,12 @@ export async function plankaRequest(
     const response = await fetch(url, {
       method: options.method || "GET",
       headers,
-      body: options.body instanceof FormData
-        ? options.body
-        : options.body
-        ? JSON.stringify(options.body)
-        : undefined,
+      body:
+        options.body instanceof FormData
+          ? options.body
+          : options.body
+            ? JSON.stringify(options.body)
+            : null,
       credentials: "include", // Include cookies for Planka authentication
     });
 
@@ -228,9 +219,7 @@ export async function getUserIdByEmail(email: string): Promise<string | null> {
     return user ? user.id : null;
   } catch (error) {
     console.error(
-      `Failed to get user ID by email: ${
-        error instanceof Error ? error.message : String(error)
-      }`,
+      `Failed to get user ID by email: ${error instanceof Error ? error.message : String(error)}`,
     );
     return null;
   }
@@ -242,9 +231,7 @@ export async function getUserIdByEmail(email: string): Promise<string | null> {
  * @param {string} username - The username of the user to look up
  * @returns {Promise<string | null>} The user ID if found, null otherwise
  */
-export async function getUserIdByUsername(
-  username: string,
-): Promise<string | null> {
+export async function getUserIdByUsername(username: string): Promise<string | null> {
   try {
     // Get all users
     const response = await plankaRequest("/api/users");

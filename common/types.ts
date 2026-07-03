@@ -167,8 +167,5 @@ export type PlankaComment = z.infer<typeof PlankaCommentSchema>;
 export type PlankaAttachment = z.infer<typeof PlankaAttachmentSchema>;
 export type PlankaCardMembership = z.infer<typeof PlankaCardMembershipSchema>;
 export type PlankaBoardMembership = z.infer<typeof PlankaBoardMembershipSchema>;
-export type PlankaProjectMembership = z.infer<
-  typeof PlankaProjectMembershipSchema
->;
+export type PlankaProjectMembership = z.infer<typeof PlankaProjectMembershipSchema>;
 export type PlankaCardLabel = z.infer<typeof PlankaCardLabelSchema>;
-

@@ -48,7 +48,9 @@ export async function getCardMemberships(cardId: string) {
     }
     return [];
   } catch (error) {
-    throw new Error(`Failed to get card memberships for ${cardId}: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to get card memberships for ${cardId}: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
 
@@ -64,7 +66,9 @@ export async function createCardMembership(cardId: string, userId: string) {
     const parsedResponse = CardMembershipResponseSchema.parse(response);
     return parsedResponse.item;
   } catch (error) {
-    throw new Error(`Failed to assign user ${userId} to card ${cardId}: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to assign user ${userId} to card ${cardId}: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
 
@@ -78,6 +82,8 @@ export async function deleteCardMembership(cardId: string, userId: string) {
     });
     return { success: true };
   } catch (error) {
-    throw new Error(`Failed to unassign user ${userId} from card ${cardId}: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to unassign user ${userId} from card ${cardId}: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
