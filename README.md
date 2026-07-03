@@ -1,19 +1,147 @@
 # Planka v2.x MCP
 
-**Give your LLM agent full control over your Planka v2.x kanban boards.**
+**Connect Claude, Cursor, Codex, and other MCP clients directly to your Planka v2.x boards.**
+
+Give your AI agents structured, secure access to projects, boards, cards, tasks, comments, labels, and workflows through the Model Context Protocol (MCP).
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@goldpulpy/planka-v2-mcp"><img alt="npm version" src="https://img.shields.io/npm/v/%40goldpulpy%2Fplanka-v2-mcp"></a>
-  <a href="https://www.npmjs.com/package/@goldpulpy/planka-v2-mcp"><img alt="npm downloads" src="https://img.shields.io/npm/dm/%40goldpulpy%2Fplanka-v2-mcp"></a>
-  <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
-  <a href="https://docs.planka.app"><img alt="Planka v2.x" src="https://img.shields.io/badge/Planka-v2.x-blueviolet"></a>
-  <a href="https://modelcontextprotocol.io"><img alt="MCP" src="https://img.shields.io/badge/MCP-compatible-2ea44f"></a>
+  <a href="https://www.npmjs.com/package/@goldpulpy/planka-v2-mcp">
+    <img
+      alt="npm version"
+      src="https://img.shields.io/npm/v/%40goldpulpy%2Fplanka-v2-mcp"
+    />
+  </a>
+  <a href="https://www.npmjs.com/package/@goldpulpy/planka-v2-mcp">
+    <img
+      alt="npm downloads"
+      src="https://img.shields.io/npm/dm/%40goldpulpy%2Fplanka-v2-mcp"
+    />
+  </a>
+  <a href="https://github.com/goldpulpy/planka-v2-mcp/actions">
+    <img
+      alt="CI"
+      src="https://img.shields.io/github/actions/workflow/status/goldpulpy/planka-v2-mcp/ci.yml?branch=main"
+    />
+  </a>
+  <a
+    href="https://github.com/goldpulpy/planka-v2-mcp/actions/workflows/cd.yaml"
+  >
+    <img
+      alt="CD"
+      src="https://img.shields.io/github/actions/workflow/status/goldpulpy/planka-v2-mcp/cd.yml?branch=main"
+    />
+  </a>
+  <img alt="Node.js" src="https://img.shields.io/badge/node-%3E%3D18-339933" />
+  <img
+    alt="TypeScript"
+    src="https://img.shields.io/badge/TypeScript-5.x-3178C6"
+  />
+  <a href="./LICENSE">
+    <img
+      alt="License: MIT"
+      src="https://img.shields.io/badge/License-MIT-yellow.svg"
+    />
+  </a>
+  <a href="https://docs.planka.app">
+    <img
+      alt="Planka v2.x"
+      src="https://img.shields.io/badge/Planka-v2.x-blueviolet"
+    />
+  </a>
+  <a href="https://modelcontextprotocol.io">
+    <img
+      alt="MCP compatible"
+      src="https://img.shields.io/badge/MCP-compatible-2ea44f"
+    />
+  </a>
 </p>
 
 > [!IMPORTANT]
 > Built specifically for **Planka v2.x**. This MCP is not compatible with Planka v1.x.
 
-### Tools
+## Why Planka MCP?
+
+Planka provides an excellent web interface for human users. AI agents, however, need structured access to projects, boards, cards, tasks, comments, and workflows.
+
+This MCP server exposes the Planka v2 API through the Model Context Protocol (MCP), allowing Claude, Cursor, Codex, and other AI agents to interact with Planka using natural language.
+
+## Supported Planka Versions
+
+| Planka Version | Status              |
+| -------------- | ------------------- |
+| 2.0.0-rc.2     | ✅ Tested           |
+| 2.1.1          | ✅ Tested           |
+| Newer 2.x      | ⚠️ Expected to work |
+
+## Features
+
+- Full project and board management
+- Complete card lifecycle management
+- Task Lists and tasks support
+- Comments, labels, and assignments
+- Card time tracking
+- Project and board summaries
+- MCP-native tool interface
+- Support for major MCP clients
+- Self-hosted and cloud Planka support
+<details>
+<summary><strong>Example Conversations</strong></summary>
+
+### Project Setup
+
+**User**
+
+> Create a project called "Website Redesign" with boards "Backlog", "In Progress", and "Done".
+
+**Assistant**
+
+```text
+✓ Created project "Website Redesign"
+✓ Created board "Backlog"
+✓ Created board "In Progress"
+✓ Created board "Done"
+
+Project setup completed successfully.
+```
+
+### Task Creation
+
+**User**
+
+> Create a card "Implement authentication" in the Backlog board with tasks:
+>
+> - Design login flow
+> - Implement JWT authentication
+> - Add password reset
+> - Write tests
+
+**Assistant**
+
+```text
+✓ Created card "Implement authentication"
+✓ Created task list
+✓ Added 4 tasks
+```
+
+### Workflow Automation
+
+**User**
+
+> Find all overdue cards assigned to me, move them to "Blocked", add a comment explaining why, and generate a project summary.
+
+**Assistant**
+
+```text
+✓ Found 7 overdue cards
+✓ Moved cards to "Blocked"
+✓ Added explanatory comments
+✓ Generated updated project summary
+```
+
+</details>
+
+<details>
+<summary><strong>Available Tools</strong></summary>
 
 | Tool Name                 | Actions                                                                                                                                                                                                               | Description                                              |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
@@ -28,15 +156,17 @@
 | `membership_manager`      | `get_all` · `create` · `get_one` · `update` · `delete`                                                                                                                                                                | Board-level membership and roles (`editor` / `viewer`)   |
 | `card_membership_manager` | `get_all` · `get_users` · `create` · `delete`                                                                                                                                                                         | Assign/remove card members by **ID, email, or username** |
 
+</details>
+
 ## Quick Start
 
-### 1. Prerequisites
+### Requirements
 
-- A running **Planka v2.x** instance, reachable over the network
-- An "agent" user in Planka with permissions scoped to the boards you want the LLM to touch
-- Node.js 18+ if running locally (not required for the `npx` path)
+- A running Planka v2.x instance
+- A dedicated Planka user account for your AI agent
+- Node.js 18+ (if running locally)
 
-### 2. Configure Your MCP Client
+### Configure Your MCP Client
 
 Every MCP-compatible client uses the same underlying command - only the config file location (and occasionally the JSON wrapper) differs. See [Client Configuration Examples](#client-configuration-examples) below for your specific tool.
 
@@ -78,7 +208,7 @@ Useful when you're contributing to the server itself or need a pinned, offline b
 > [!TIP]
 > Set `PLANKA_IGNORE_SSL` to `"true"` only for self-signed certs in trusted/local environments - leave it unset in production.
 
-### 3. Verify the Connection
+### Verify the Connection
 
 Ask your agent something read-only first, e.g. _"List my Planka projects."_ If you get a real response back, you're wired up correctly.
 
@@ -226,7 +356,7 @@ with the four `PLANKA_*` environment variables set as shown above.
 
 </details>
 
-## 🔧 Environment Variables
+## Environment Variables
 
 | Variable                | Required | Default | Description                                          |
 | ----------------------- | :------: | :-----: | ---------------------------------------------------- |
@@ -234,6 +364,14 @@ with the four `PLANKA_*` environment variables set as shown above.
 | `PLANKA_AGENT_EMAIL`    |    ✅    |    -    | Login email for the dedicated agent user             |
 | `PLANKA_AGENT_PASSWORD` |    ✅    |    -    | Password for the agent user                          |
 | `PLANKA_IGNORE_SSL`     |    ❌    | `false` | Skip SSL verification - self-signed/local certs only |
+
+## Security
+
+- Authentication is performed using a dedicated Planka user account.
+- Credentials are supplied through environment variables only.
+- The MCP server does not persist board data outside the running process.
+- SSL certificate verification is enabled by default.
+- `PLANKA_IGNORE_SSL=true` should only be used in trusted local or self-hosted environments.
 
 ## Troubleshooting
 
@@ -274,20 +412,13 @@ cp .env.example .env
 # Build the project
 npm run build
 
-# Run in development mode
-npm inspector
-
-# Run quality checks (lint, types, format, tests)
-npm run qc
+# Run @modelcontextprotocol/inspector
+npm run inspector
 ```
 
 ## Contributing
 
-Contributions are welcome!
-
-1. Fork the repo and create a feature branch
-2. Run `npm run qc` before opening a PR - lint, type-checking, and tests must all pass
-3. Describe the _why_, not just the _what_, in your PR description
+Contributions are welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
 
 ## Acknowledgements
 
@@ -295,6 +426,6 @@ This project is forked from [Navya-Tecnologia/planka-v2-mcp](https://github.com/
 
 ## License
 
-MIT - see [LICENSE](./LICENSE) for details.
+Licensed under the MIT License. See [LICENSE](./LICENSE) for details.
 
 <p align="center"><em>This project focuses exclusively on the MCP interface. For Planka server setup itself, see the <a href="https://docs.planka.app">official Planka documentation</a>.</em></p>

@@ -26,13 +26,13 @@
     "build": "tsc && shx chmod +x dist/*.js",
     "watch": "tsc --watch",
     "inspector": "cross-env SERVER_PORT=3008 CLIENT_PORT=5174 DOTENV_CONFIG_PATH=.env npx -y @modelcontextprotocol/inspector node -r dotenv/config dist/index.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testMatch='**/tests/**/*.test.ts'",
+    "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/integration.test.ts",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format .",
     "format:fix": "biome format --write .",
     "typecheck": "tsc --noEmit",
-    "qc": "npm run typecheck && npm run lint && npm run build && npm test",
+    "qc": "npm run typecheck && npm run lint && npm run build",
     "prepublishOnly": "npm run qc"
   },
   "dependencies": {

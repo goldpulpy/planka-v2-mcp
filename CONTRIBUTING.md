@@ -28,6 +28,12 @@ Run the full check suite before opening a pull request:
 npm run qc
 ```
 
+and integration tests:
+
+```bash
+npm run test:integration
+```
+
 This runs type checking, Biome linting, build, and Jest tests. For targeted work, use `npm run typecheck`, `npm run lint`, `npm run format`, or `npm test`.
 
 ## Project Layout
