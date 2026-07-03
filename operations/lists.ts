@@ -6,8 +6,8 @@
  */
 
 import { z } from "zod";
-import { plankaRequest } from "../common/utils.js";
 import { PlankaListSchema } from "../common/types.js";
+import { plankaRequest } from "../common/utils.js";
 
 // Schema definitions
 /**
@@ -66,7 +66,7 @@ export type CreateListOptions = z.infer<typeof CreateListSchema>;
 export type UpdateListOptions = z.infer<typeof UpdateListSchema>;
 
 // Response schemas
-const ListsResponseSchema = z.object({
+const _ListsResponseSchema = z.object({
   items: z.array(PlankaListSchema),
   included: z.record(z.any()).optional(),
 });
@@ -89,23 +89,19 @@ const ListResponseSchema = z.object({
  */
 export async function createList(options: CreateListOptions) {
   try {
-    const response = await plankaRequest(
-      `/api/boards/${options.boardId}/lists`,
-      {
-        method: "POST",
-        body: {
-          name: options.name,
-          position: options.position,
-          type: (options as any).type || "active",
-        },
+    const response = await plankaRequest(`/api/boards/${options.boardId}/lists`, {
+      method: "POST",
+      body: {
+        name: options.name,
+        position: options.position,
+        type: (options as any).type || "active",
       },
-    );
+    });
     const parsedResponse = ListResponseSchema.parse(response);
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to create list: ${error instanceof Error ? error.message : String(error)
-      }`,
+      `Failed to create list: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -119,7 +115,7 @@ export async function createList(options: CreateListOptions) {
 export async function getLists(boardId: string) {
   try {
     const response = await plankaRequest(`/api/boards/${boardId}`);
-    if (response && typeof response === "object" && (response as any).included && (response as any).included.lists) {
+    if (response && typeof response === "object" && (response as any).included?.lists) {
       return (response as any).included.lists;
     }
     return [];
@@ -153,10 +149,7 @@ export async function getList(id: string) {
  * @param {Partial<Omit<UpdateListOptions, "id">>} options - The properties to update
  * @returns {Promise<object>} The updated list
  */
-export async function updateList(
-  id: string,
-  options: Partial<Omit<UpdateListOptions, "id">>,
-) {
+export async function updateList(id: string, options: Partial<Omit<UpdateListOptions, "id">>) {
   const response = await plankaRequest(`/api/lists/${id}`, {
     method: "PATCH",
     body: options,
@@ -177,4 +170,3 @@ export async function deleteList(id: string) {
   });
   return { success: true };
 }
-

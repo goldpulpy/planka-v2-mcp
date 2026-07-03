@@ -41,7 +41,9 @@ export async function getUsers(page: number = 1, perPage: number = 100) {
     const parsedResponse = UsersResponseSchema.parse(response);
     return parsedResponse.items;
   } catch (error) {
-    throw new Error(`Failed to get users: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to get users: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
 
@@ -54,6 +56,8 @@ export async function getUser(id: string) {
     const parsedResponse = UserResponseSchema.parse(response);
     return parsedResponse.item;
   } catch (error) {
-    throw new Error(`Failed to get user ${id}: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to get user ${id}: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }

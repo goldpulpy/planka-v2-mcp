@@ -7,8 +7,8 @@
  */
 
 import { z } from "zod";
-import { plankaRequest } from "../common/utils.js";
 import { PlankaBoardMembershipSchema } from "../common/types.js";
+import { plankaRequest } from "../common/utils.js";
 import * as boards from "./boards.js";
 
 // Schema definitions
@@ -95,23 +95,20 @@ export async function createBoardMembership(options: CreateBoardMembershipOption
       throw new Error("Project ID could not be determined for the board.");
     }
 
-    const response = await plankaRequest(
-      `/api/boards/${options.boardId}/board-memberships`,
-      {
-        method: "POST",
-        body: {
-          boardId: options.boardId,
-          userId: options.userId,
-          role: options.role,
-        },
+    const response = await plankaRequest(`/api/boards/${options.boardId}/board-memberships`, {
+      method: "POST",
+      body: {
+        boardId: options.boardId,
+        userId: options.userId,
+        role: options.role,
       },
-    );
+    });
 
     const parsedResponse = BoardMembershipResponseSchema.parse(response);
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to create board membership: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to create board membership: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -126,11 +123,11 @@ export async function createBoardMembership(options: CreateBoardMembershipOption
 export async function getBoardMemberships(boardId: string, _projectId?: string) {
   try {
     const response = await plankaRequest(`/api/boards/${boardId}`);
-    
-    if (response && typeof response === "object" && (response as any).included && (response as any).included.boardMemberships) {
+
+    if (response && typeof response === "object" && (response as any).included?.boardMemberships) {
       return (response as any).included.boardMemberships;
     }
-    
+
     return [];
   } catch (error) {
     console.error(`Error getting memberships for board ${boardId}:`, error);
@@ -147,11 +144,9 @@ export async function getBoardMemberships(boardId: string, _projectId?: string) 
 export async function getBoardMembership(boardId: string, id: string) {
   const response = await plankaRequest(`/api/boards/${boardId}`);
 
-  if (response && typeof response === "object" && (response as any).included && (response as any).included.boardMemberships) {
+  if (response && typeof response === "object" && (response as any).included?.boardMemberships) {
     const memberships = (response as any).included.boardMemberships;
-    const membership = memberships.find(
-      (m: any) => m.id === id,
-    );
+    const membership = memberships.find((m: any) => m.id === id);
     if (membership) {
       return membership;
     }
@@ -167,7 +162,10 @@ export async function getBoardMembership(boardId: string, id: string) {
  * @param {Partial<UpdateBoardMembershipOptions>} options - The properties to update
  * @returns {Promise<object>} The updated board membership
  */
-export async function updateBoardMembership(id: string, options: Partial<UpdateBoardMembershipOptions>) {
+export async function updateBoardMembership(
+  id: string,
+  options: Partial<UpdateBoardMembershipOptions>,
+) {
   try {
     const { id: _, ...updateData } = options;
     const response = await plankaRequest(`/api/board-memberships/${id}`, {
@@ -178,7 +176,7 @@ export async function updateBoardMembership(id: string, options: Partial<UpdateB
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to update board membership: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to update board membership: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -197,8 +195,7 @@ export async function deleteBoardMembership(id: string) {
     return { success: true };
   } catch (error) {
     throw new Error(
-      `Failed to delete board membership: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to delete board membership: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
-

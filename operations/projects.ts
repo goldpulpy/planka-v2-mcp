@@ -6,8 +6,8 @@
  */
 
 import { z } from "zod";
-import { plankaRequest } from "../common/utils.js";
 import { PlankaProjectSchema } from "../common/types.js";
+import { plankaRequest } from "../common/utils.js";
 
 // Schema definitions
 /**
@@ -28,12 +28,8 @@ export const CreateProjectSchema = z.object({
  * @property {number} [perPage] - Number of results per page (default: 30, max: 100)
  */
 export const GetProjectsSchema = z.object({
-  page: z.number().optional().describe(
-    "Page number for pagination (default: 1)",
-  ),
-  perPage: z.number().optional().describe(
-    "Number of results per page (default: 30, max: 100)",
-  ),
+  page: z.number().optional().describe("Page number for pagination (default: 1)"),
+  perPage: z.number().optional().describe("Number of results per page (default: 30, max: 100)"),
 });
 
 /**
@@ -98,10 +94,7 @@ const ProjectResponseSchema = z.object({
  * @returns {Promise<{items: Array<object>, included?: object}>} Paginated projects
  * @throws {Error} If retrieving projects fails
  */
-export async function getProjects(
-  page: number = 1,
-  perPage: number = 30,
-) {
+export async function getProjects(page: number = 1, perPage: number = 30) {
   try {
     // Ensure perPage is within limits
     if (perPage > 100) {
@@ -112,19 +105,15 @@ export async function getProjects(
     queryParams.append("page", page.toString());
     queryParams.append("perPage", perPage.toString());
 
-    const response = await plankaRequest(
-      `/api/projects?${queryParams.toString()}`,
-      {
-        method: "GET",
-      },
-    );
+    const response = await plankaRequest(`/api/projects?${queryParams.toString()}`, {
+      method: "GET",
+    });
 
     const parsedResponse = ProjectsResponseSchema.parse(response);
     return parsedResponse;
   } catch (error) {
     throw new Error(
-      `Failed to get projects: ${error instanceof Error ? error.message : String(error)
-      }`,
+      `Failed to get projects: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -143,8 +132,7 @@ export async function getProject(id: string) {
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to get project: ${error instanceof Error ? error.message : String(error)
-      }`,
+      `Failed to get project: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -167,8 +155,7 @@ export async function createProject(options: CreateProjectOptions) {
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to create project: ${error instanceof Error ? error.message : String(error)
-      }`,
+      `Failed to create project: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -191,8 +178,7 @@ export async function updateProject(id: string, options: Omit<UpdateProjectOptio
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to update project: ${error instanceof Error ? error.message : String(error)
-      }`,
+      `Failed to update project: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -212,9 +198,7 @@ export async function deleteProject(id: string) {
     return { success: true };
   } catch (error) {
     throw new Error(
-      `Failed to delete project: ${error instanceof Error ? error.message : String(error)
-      }`,
+      `Failed to delete project: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
-

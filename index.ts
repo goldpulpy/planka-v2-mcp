@@ -3,10 +3,12 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
 import { z } from "zod";
-
+import { getUserIdByEmail, getUserIdByUsername } from "./common/utils.js";
+import { VERSION } from "./common/version.js";
 // Import Planka operations
 import * as boardMemberships from "./operations/boardMemberships.js";
 import * as boards from "./operations/boards.js";
+import * as cardMemberships from "./operations/cardMemberships.js";
 import * as cards from "./operations/cards.js";
 import * as comments from "./operations/comments.js";
 import * as labels from "./operations/labels.js";
@@ -15,8 +17,6 @@ import * as projects from "./operations/projects.js";
 import * as taskLists from "./operations/taskLists.js";
 import * as tasks from "./operations/tasks.js";
 import * as users from "./operations/users.js";
-import * as cardMemberships from "./operations/cardMemberships.js";
-import { getUserIdByEmail, getUserIdByUsername } from "./common/utils.js";
 
 // Import custom tools
 import {
@@ -25,8 +25,6 @@ import {
   getCardDetails,
   getProjectSummary,
 } from "./tools/index.js";
-
-import { VERSION } from "./common/version.js";
 
 const server = new McpServer(
   {
@@ -37,7 +35,7 @@ const server = new McpServer(
     capabilities: {
       tools: {},
     },
-  }
+  },
 );
 
 const registerTool = server.tool.bind(server) as (
@@ -76,17 +74,14 @@ registerTool(
     description: z.string().optional().describe("The description of the project"),
     position: z.number().optional().describe("The position of the board"),
     type: z.string().optional().describe("The type of the project (private/shared) or board"),
-    backgroundType: z.enum(["gradient", "image"]).optional().describe("Background type for update_project"),
+    backgroundType: z
+      .enum(["gradient", "image"])
+      .optional()
+      .describe("Background type for update_project"),
     backgroundGradient: z.string().optional().describe("Background gradient for update_project"),
-    page: z
-      .number()
-      .optional()
-      .describe("The page number for pagination (1-indexed)"),
+    page: z.number().optional().describe("The page number for pagination (1-indexed)"),
     perPage: z.number().optional().describe("The number of items per page"),
-    boardId: z
-      .string()
-      .optional()
-      .describe("The ID of the board to get a summary for"),
+    boardId: z.string().optional().describe("The ID of the board to get a summary for"),
     includeTaskDetails: z
       .boolean()
       .optional()
@@ -105,7 +100,7 @@ registerTool(
       case "get_projects":
         result = await projects.getProjects(args.page || 1, args.perPage || 50);
         break;
-      
+
       case "create_project":
         if (!args.name) throw new Error("name is required for create_project action");
         result = await projects.createProject({
@@ -136,16 +131,13 @@ registerTool(
         break;
 
       case "get_boards":
-        if (!args.projectId)
-          throw new Error("projectId is required for get_boards action");
+        if (!args.projectId) throw new Error("projectId is required for get_boards action");
         result = await boards.getBoards(args.projectId);
         break;
 
       case "create_board":
         if (!args.projectId || !args.name || args.position === undefined)
-          throw new Error(
-            "projectId, name, and position are required for create_board action"
-          );
+          throw new Error("projectId, name, and position are required for create_board action");
         result = await boards.createBoard({
           projectId: args.projectId,
           name: args.name,
@@ -159,9 +151,8 @@ registerTool(
         break;
 
       case "update_board":
-        if (!args.id)
-          throw new Error("id is required for update_board action");
-        
+        if (!args.id) throw new Error("id is required for update_board action");
+
         result = await boards.updateBoard(args.id, {
           name: args.name,
           position: args.position,
@@ -175,8 +166,7 @@ registerTool(
         break;
 
       case "get_board_summary":
-        if (!args.boardId)
-          throw new Error("boardId is required for get_board_summary action");
+        if (!args.boardId) throw new Error("boardId is required for get_board_summary action");
         result = await getBoardSummary({
           boardId: args.boardId,
           includeTaskDetails: args.includeTaskDetails || false,
@@ -186,8 +176,7 @@ registerTool(
 
       case "get_project_summary": {
         const projectId = args.projectId || args.id;
-        if (!projectId)
-          throw new Error("projectId is required for get_project_summary action");
+        if (!projectId) throw new Error("projectId is required for get_project_summary action");
         result = await getProjectSummary({
           projectId,
         });
@@ -201,7 +190,7 @@ registerTool(
     return {
       content: [{ type: "text", text: JSON.stringify(result) }],
     };
-  }
+  },
 );
 
 // 2. List Manager
@@ -216,7 +205,10 @@ registerTool(
     boardId: z.string().optional().describe("The ID of the board"),
     name: z.string().optional().describe("The name of the list"),
     position: z.number().optional().describe("The position of the list"),
-    type: z.enum(["active", "closed", "archive", "trash"]).optional().describe("The type of the list"),
+    type: z
+      .enum(["active", "closed", "archive", "trash"])
+      .optional()
+      .describe("The type of the list"),
     color: z.string().optional().describe("The color of the list"),
   },
   async (args) => {
@@ -224,16 +216,13 @@ registerTool(
 
     switch (args.action) {
       case "get_all":
-        if (!args.boardId)
-          throw new Error("boardId is required for get_all action");
+        if (!args.boardId) throw new Error("boardId is required for get_all action");
         result = await lists.getLists(args.boardId);
         break;
 
       case "create":
         if (!args.boardId || !args.name || args.position === undefined)
-          throw new Error(
-            "boardId, name, and position are required for create action"
-          );
+          throw new Error("boardId, name, and position are required for create action");
         result = await lists.createList({
           boardId: args.boardId,
           name: args.name,
@@ -247,8 +236,7 @@ registerTool(
         break;
 
       case "update":
-        if (!args.id)
-          throw new Error("id is required for update action");
+        if (!args.id) throw new Error("id is required for update action");
         result = await lists.updateList(args.id, {
           name: args.name,
           position: args.position,
@@ -269,7 +257,7 @@ registerTool(
     return {
       content: [{ type: "text", text: JSON.stringify(result) }],
     };
-  }
+  },
 );
 
 // 3. Card Manager
@@ -292,56 +280,32 @@ registerTool(
       .describe("The action to perform"),
     id: z.string().optional().describe("The ID of the card"),
     listId: z.string().optional().describe("The ID of the list"),
-    boardId: z
-      .string()
-      .optional()
-      .describe("The ID of the board (if moving between boards)"),
-    projectId: z
-      .string()
-      .optional()
-      .describe("The ID of the project (if moving between projects)"),
+    boardId: z.string().optional().describe("The ID of the board (if moving between boards)"),
+    projectId: z.string().optional().describe("The ID of the project (if moving between projects)"),
     name: z.string().optional().describe("The name of the card"),
-    type: z.enum(["project", "story"]).optional().describe("The type of the card (project or story)"),
+    type: z
+      .enum(["project", "story"])
+      .optional()
+      .describe("The type of the card (project or story)"),
     description: z.string().optional().describe("The description of the card"),
     position: z.number().optional().describe("The position of the card"),
-    dueDate: z
-      .string()
-      .optional()
-      .describe("The due date for the card (ISO format)"),
-    isCompleted: z
-      .boolean()
-      .optional()
-      .describe("Whether the card is completed"),
-    isDueCompleted: z
-      .boolean()
-      .optional()
-      .describe("Whether the card due date is completed"),
-    isClosed: z
-      .boolean()
-      .optional()
-      .describe("Whether the card is closed"),
+    dueDate: z.string().optional().describe("The due date for the card (ISO format)"),
+    isCompleted: z.boolean().optional().describe("Whether the card is completed"),
+    isDueCompleted: z.boolean().optional().describe("Whether the card due date is completed"),
+    isClosed: z.boolean().optional().describe("Whether the card is closed"),
     tasks: z
       .array(z.string())
       .optional()
-      .describe(
-        "Array of task descriptions to create for create_with_tasks action"
-      ),
-    comment: z
-      .string()
-      .optional()
-      .describe("Optional comment to add to the card"),
-    cardId: z
-      .string()
-      .optional()
-      .describe("The ID of the card to get details for"),
+      .describe("Array of task descriptions to create for create_with_tasks action"),
+    comment: z.string().optional().describe("Optional comment to add to the card"),
+    cardId: z.string().optional().describe("The ID of the card to get details for"),
   },
   async (args) => {
     let result;
 
     switch (args.action) {
       case "get_all":
-        if (!args.listId)
-          throw new Error("listId is required for get_all action");
+        if (!args.listId) throw new Error("listId is required for get_all action");
         result = await cards.getCards(args.listId);
         break;
 
@@ -384,15 +348,8 @@ registerTool(
 
       case "move":
         if (!args.id || !args.listId || args.position === undefined)
-          throw new Error(
-            "id, listId, and position are required for move action"
-          );
-        result = await cards.moveCard(
-          args.id,
-          args.listId,
-          args.position,
-          args.boardId
-        );
+          throw new Error("id, listId, and position are required for move action");
+        result = await cards.moveCard(args.id, args.listId, args.position, args.boardId);
         break;
 
       case "duplicate":
@@ -408,9 +365,7 @@ registerTool(
 
       case "create_with_tasks":
         if (!args.listId || !args.name)
-          throw new Error(
-            "listId and name are required for create_with_tasks action"
-          );
+          throw new Error("listId and name are required for create_with_tasks action");
         result = await createCardWithTasks({
           listId: args.listId,
           name: args.name,
@@ -422,8 +377,7 @@ registerTool(
         break;
 
       case "get_details":
-        if (!args.cardId)
-          throw new Error("cardId is required for get_details action");
+        if (!args.cardId) throw new Error("cardId is required for get_details action");
         result = await getCardDetails({
           cardId: args.cardId,
         });
@@ -436,7 +390,7 @@ registerTool(
     return {
       content: [{ type: "text", text: JSON.stringify(result) }],
     };
-  }
+  },
 );
 
 // 4. Stopwatch Manager
@@ -444,9 +398,7 @@ registerTool(
   "mcp_kanban_stopwatch",
   "Manage card stopwatches for time tracking",
   {
-    action: z
-      .enum(["start", "stop", "get", "reset"])
-      .describe("The action to perform"),
+    action: z.enum(["start", "stop", "get", "reset"]).describe("The action to perform"),
     id: z.string().describe("The ID of the card"),
   },
   async (args) => {
@@ -476,7 +428,7 @@ registerTool(
     return {
       content: [{ type: "text", text: JSON.stringify(result) }],
     };
-  }
+  },
 );
 
 // 5. Label Manager
@@ -485,34 +437,57 @@ registerTool(
   "Manage kanban labels with various operations",
   {
     action: z
-      .enum([
-        "get_all",
-        "create",
-        "update",
-        "delete",
-        "add_to_card",
-        "remove_from_card",
-      ])
+      .enum(["get_all", "create", "update", "delete", "add_to_card", "remove_from_card"])
       .describe("The action to perform"),
     id: z.string().optional().describe("The ID of the label"),
     boardId: z.string().optional().describe("The ID of the board"),
     cardId: z.string().optional().describe("The ID of the card"),
-    labelId: z
-      .string()
-      .optional()
-      .describe("The ID of the label (for card operations)"),
+    labelId: z.string().optional().describe("The ID of the label (for card operations)"),
     name: z.string().optional().describe("The name of the label"),
     color: z
       .enum([
-        "muddy-grey", "autumn-leafs", "morning-sky", "antique-blue", "egg-yellow",
-        "desert-sand", "dark-granite", "fresh-salad", "lagoon-blue", "midnight-blue",
-        "light-orange", "pumpkin-orange", "light-concrete", "sunny-grass", "navy-blue",
-        "lilac-eyes", "apricot-red", "orange-peel", "silver-glint", "bright-moss",
-        "deep-ocean", "summer-sky", "berry-red", "light-cocoa", "grey-stone",
-        "tank-green", "coral-green", "sugar-plum", "pink-tulip", "shady-rust",
-        "wet-rock", "wet-moss", "turquoise-sea", "lavender-fields", "piggy-red",
-        "light-mud", "gun-metal", "modern-green", "french-coast", "sweet-lilac",
-        "red-burgundy", "pirate-gold"
+        "muddy-grey",
+        "autumn-leafs",
+        "morning-sky",
+        "antique-blue",
+        "egg-yellow",
+        "desert-sand",
+        "dark-granite",
+        "fresh-salad",
+        "lagoon-blue",
+        "midnight-blue",
+        "light-orange",
+        "pumpkin-orange",
+        "light-concrete",
+        "sunny-grass",
+        "navy-blue",
+        "lilac-eyes",
+        "apricot-red",
+        "orange-peel",
+        "silver-glint",
+        "bright-moss",
+        "deep-ocean",
+        "summer-sky",
+        "berry-red",
+        "light-cocoa",
+        "grey-stone",
+        "tank-green",
+        "coral-green",
+        "sugar-plum",
+        "pink-tulip",
+        "shady-rust",
+        "wet-rock",
+        "wet-moss",
+        "turquoise-sea",
+        "lavender-fields",
+        "piggy-red",
+        "light-mud",
+        "gun-metal",
+        "modern-green",
+        "french-coast",
+        "sweet-lilac",
+        "red-burgundy",
+        "pirate-gold",
       ])
       .optional()
       .describe("The color of the label"),
@@ -523,20 +498,13 @@ registerTool(
 
     switch (args.action) {
       case "get_all":
-        if (!args.boardId)
-          throw new Error("boardId is required for get_all action");
+        if (!args.boardId) throw new Error("boardId is required for get_all action");
         result = await labels.getLabels(args.boardId);
         break;
 
       case "create":
-        if (
-          !args.boardId ||
-          !args.name ||
-          !args.color
-        )
-          throw new Error(
-            "boardId, name, and color are required for create action"
-          );
+        if (!args.boardId || !args.name || !args.color)
+          throw new Error("boardId, name, and color are required for create action");
         result = await labels.createLabel({
           boardId: args.boardId,
           name: args.name,
@@ -546,8 +514,7 @@ registerTool(
         break;
 
       case "update":
-        if (!args.id)
-          throw new Error("id is required for update action");
+        if (!args.id) throw new Error("id is required for update action");
         result = await labels.updateLabel(args.id, {
           name: args.name,
           color: args.color as any,
@@ -562,17 +529,13 @@ registerTool(
 
       case "add_to_card":
         if (!args.cardId || !args.labelId)
-          throw new Error(
-            "cardId and labelId are required for add_to_card action"
-          );
+          throw new Error("cardId and labelId are required for add_to_card action");
         result = await labels.addLabelToCard(args.cardId, args.labelId);
         break;
 
       case "remove_from_card":
         if (!args.cardId || !args.labelId)
-          throw new Error(
-            "cardId and labelId are required for remove_from_card action"
-          );
+          throw new Error("cardId and labelId are required for remove_from_card action");
         result = await labels.removeLabelFromCard(args.cardId, args.labelId);
         break;
 
@@ -583,7 +546,7 @@ registerTool(
     return {
       content: [{ type: "text", text: JSON.stringify(result) }],
     };
-  }
+  },
 );
 
 // 6. Task List Manager (New for v2.0)
@@ -604,8 +567,7 @@ registerTool(
 
     switch (args.action) {
       case "get_all":
-        if (!args.cardId)
-          throw new Error("cardId is required for get_all action");
+        if (!args.cardId) throw new Error("cardId is required for get_all action");
         result = await taskLists.getTaskLists(args.cardId);
         break;
 
@@ -644,7 +606,7 @@ registerTool(
     return {
       content: [{ type: "text", text: JSON.stringify(result) }],
     };
-  }
+  },
 );
 
 // 7. Task Manager
@@ -653,24 +615,13 @@ registerTool(
   "Manage kanban tasks with various operations",
   {
     action: z
-      .enum([
-        "get_all",
-        "create",
-        "batch_create",
-        "get_one",
-        "update",
-        "delete",
-        "complete_task",
-      ])
+      .enum(["get_all", "create", "batch_create", "get_one", "update", "delete", "complete_task"])
       .describe("The action to perform"),
     id: z.string().optional().describe("The ID of the task"),
     cardId: z.string().optional().describe("The ID of the card (flattens all lists)"),
     taskListId: z.string().optional().describe("The ID of the task list (v2 direct)"),
     name: z.string().optional().describe("The name of the task"),
-    isCompleted: z
-      .boolean()
-      .optional()
-      .describe("Whether the task is completed"),
+    isCompleted: z.boolean().optional().describe("Whether the task is completed"),
     position: z.number().optional().describe("The position of the task"),
     tasks: z
       .array(
@@ -679,7 +630,7 @@ registerTool(
           taskListId: z.string().optional().describe("The ID of the task list"),
           name: z.string().describe("The name of this task"),
           position: z.number().optional().describe("The position of this task"),
-        })
+        }),
       )
       .optional()
       .describe("Array of tasks to create in batch"),
@@ -690,11 +641,11 @@ registerTool(
     switch (args.action) {
       case "get_all":
         if (args.taskListId) {
-            result = await tasks.getTaskListTasks(args.taskListId);
+          result = await tasks.getTaskListTasks(args.taskListId);
         } else if (args.cardId) {
-            result = await tasks.getTasks(args.cardId);
+          result = await tasks.getTasks(args.cardId);
         } else {
-            throw new Error("Either cardId or taskListId is required for get_all action");
+          throw new Error("Either cardId or taskListId is required for get_all action");
         }
         break;
 
@@ -730,8 +681,7 @@ registerTool(
         break;
 
       case "complete_task":
-        if (!args.id)
-          throw new Error("id is required for complete_task action");
+        if (!args.id) throw new Error("id is required for complete_task action");
         result = await tasks.updateTask(args.id, { isCompleted: true });
         break;
 
@@ -747,7 +697,7 @@ registerTool(
     return {
       content: [{ type: "text", text: JSON.stringify(result) }],
     };
-  }
+  },
 );
 
 // 8. Comment Manager
@@ -767,8 +717,7 @@ registerTool(
 
     switch (args.action) {
       case "get_all":
-        if (!args.cardId)
-          throw new Error("cardId is required for get_all action");
+        if (!args.cardId) throw new Error("cardId is required for get_all action");
         result = await comments.getComments(args.cardId);
         break;
 
@@ -788,8 +737,7 @@ registerTool(
         break;
 
       case "update":
-        if (!args.id || !args.text)
-          throw new Error("id and text are required for update action");
+        if (!args.id || !args.text) throw new Error("id and text are required for update action");
         result = await comments.updateComment(args.id, {
           text: args.text,
         });
@@ -807,7 +755,7 @@ registerTool(
     return {
       content: [{ type: "text", text: JSON.stringify(result) }],
     };
-  }
+  },
 );
 
 // 9. Membership Manager
@@ -822,30 +770,21 @@ registerTool(
     boardId: z.string().optional().describe("The ID of the board"),
     projectId: z.string().optional().describe("The ID of the project"),
     userId: z.string().optional().describe("The ID of the user"),
-    role: z
-      .enum(["editor", "viewer"])
-      .optional()
-      .describe("The role of the user in the board"),
-    canComment: z
-      .boolean()
-      .optional()
-      .describe("Whether the user can comment on the board"),
+    role: z.enum(["editor", "viewer"]).optional().describe("The role of the user in the board"),
+    canComment: z.boolean().optional().describe("Whether the user can comment on the board"),
   },
   async (args) => {
     let result;
 
     switch (args.action) {
       case "get_all":
-        if (!args.boardId)
-          throw new Error("boardId is required for get_all action");
+        if (!args.boardId) throw new Error("boardId is required for get_all action");
         result = await boardMemberships.getBoardMemberships(args.boardId, args.projectId);
         break;
 
       case "create":
         if (!args.boardId || !args.userId || !args.role)
-          throw new Error(
-            "boardId, userId, and role are required for create action"
-          );
+          throw new Error("boardId, userId, and role are required for create action");
         result = await boardMemberships.createBoardMembership({
           boardId: args.boardId,
           userId: args.userId,
@@ -856,16 +795,15 @@ registerTool(
 
       case "get_one":
         if (!args.id) throw new Error("id is required for get_one action");
-        if (!args.boardId)
-          throw new Error("boardId is required for get_one action");
+        if (!args.boardId) throw new Error("boardId is required for get_one action");
         result = await boardMemberships.getBoardMembership(args.boardId, args.id);
         break;
 
       case "update":
         if (!args.id) throw new Error("id is required for update action");
         result = await boardMemberships.updateBoardMembership(args.id, {
-            role: args.role,
-            canComment: args.canComment,
+          role: args.role,
+          canComment: args.canComment,
         });
         break;
 
@@ -881,7 +819,7 @@ registerTool(
     return {
       content: [{ type: "text", text: JSON.stringify(result) }],
     };
-  }
+  },
 );
 
 // 10. Card Membership Manager (with user resolution)
@@ -889,9 +827,7 @@ registerTool(
   "mcp_kanban_card_membership_manager",
   "Manage memberships of a card (assign users by ID, email, or username)",
   {
-    action: z
-      .enum(["get_all", "create", "delete", "get_users"])
-      .describe("The action to perform"),
+    action: z.enum(["get_all", "create", "delete", "get_users"]).describe("The action to perform"),
     cardId: z.string().optional().describe("The ID of the card"),
     userId: z.string().optional().describe("The ID of the user"),
     email: z.string().optional().describe("The email of the user"),
@@ -921,7 +857,8 @@ registerTool(
       case "create": {
         if (!args.cardId) throw new Error("cardId is required for create action");
         const uid = await resolveUserId();
-        if (!uid) throw new Error("Could not resolve user ID from provided userId, email, or username");
+        if (!uid)
+          throw new Error("Could not resolve user ID from provided userId, email, or username");
         result = await cardMemberships.createCardMembership(args.cardId, uid);
         break;
       }
@@ -929,7 +866,8 @@ registerTool(
       case "delete": {
         if (!args.cardId) throw new Error("cardId is required for delete action");
         const uid = await resolveUserId();
-        if (!uid) throw new Error("Could not resolve user ID from provided userId, email, or username");
+        if (!uid)
+          throw new Error("Could not resolve user ID from provided userId, email, or username");
         result = await cardMemberships.deleteCardMembership(args.cardId, uid);
         break;
       }
@@ -941,7 +879,7 @@ registerTool(
     return {
       content: [{ type: "text", text: JSON.stringify(result) }],
     };
-  }
+  },
 );
 
 async function runServer() {

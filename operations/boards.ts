@@ -7,12 +7,12 @@
  */
 
 import { z } from "zod";
-import { plankaRequest } from "../common/utils.js";
-import { PlankaBoardSchema } from "../common/types.js";
 import { getAdminUserId } from "../common/setup.js";
+import { PlankaBoardSchema } from "../common/types.js";
+import { plankaRequest } from "../common/utils.js";
 import * as boardMemberships from "./boardMemberships.js";
-import * as lists from "./lists.js";
 import * as labels from "./labels.js";
+import * as lists from "./lists.js";
 
 // Schema definitions
 /**
@@ -24,9 +24,7 @@ import * as labels from "./labels.js";
 export const CreateBoardSchema = z.object({
   projectId: z.string().describe("Project ID"),
   name: z.string().describe("Board name"),
-  position: z.number().default(65535).describe(
-    "Board position (default: 65535)",
-  ),
+  position: z.number().default(65535).describe("Board position (default: 65535)"),
 });
 
 /**
@@ -81,7 +79,7 @@ export type CreateBoardOptions = z.infer<typeof CreateBoardSchema>;
 export type UpdateBoardOptions = z.infer<typeof UpdateBoardSchema>;
 
 // Response schemas
-const BoardsResponseSchema = z.object({
+const _BoardsResponseSchema = z.object({
   items: z.array(PlankaBoardSchema),
   included: z.record(z.any()).optional(),
 });
@@ -155,11 +153,7 @@ async function createDefaultLabels(boardId: string) {
     ];
 
     // Combine all labels
-    const defaultLabels = [
-      ...priorityLabels,
-      ...typeLabels,
-      ...statusLabels,
-    ];
+    const defaultLabels = [...priorityLabels, ...typeLabels, ...statusLabels];
 
     for (const label of defaultLabels) {
       await labels.createLabel({
@@ -189,16 +183,13 @@ async function createDefaultLabels(boardId: string) {
  */
 export async function createBoard(options: CreateBoardOptions) {
   try {
-    const response = await plankaRequest(
-      `/api/projects/${options.projectId}/boards`,
-      {
-        method: "POST",
-        body: {
-          name: options.name,
-          position: options.position,
-        },
+    const response = await plankaRequest(`/api/projects/${options.projectId}/boards`, {
+      method: "POST",
+      body: {
+        name: options.name,
+        position: options.position,
       },
-    );
+    });
     const parsedResponse = BoardResponseSchema.parse(response);
     const board = parsedResponse.item;
 
@@ -213,10 +204,7 @@ export async function createBoard(options: CreateBoardOptions) {
         });
       }
     } catch (error) {
-      console.error(
-        "Error adding admin user as board member:",
-        error,
-      );
+      console.error("Error adding admin user as board member:", error);
     }
 
     // Create default lists and labels
@@ -226,8 +214,7 @@ export async function createBoard(options: CreateBoardOptions) {
     return board;
   } catch (error) {
     throw new Error(
-      `Failed to create board: ${error instanceof Error ? error.message : String(error)
-      }`,
+      `Failed to create board: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -242,11 +229,11 @@ export async function createBoard(options: CreateBoardOptions) {
 export async function getBoards(projectId: string) {
   try {
     const response = await plankaRequest(`/api/projects/${projectId}`);
-    
-    if (response && typeof response === "object" && (response as any).included && (response as any).included.boards) {
+
+    if (response && typeof response === "object" && (response as any).included?.boards) {
       return (response as any).included.boards;
     }
-    
+
     return [];
   } catch (error) {
     console.error(`Error getting boards for project ${projectId}:`, error);
@@ -268,7 +255,7 @@ export async function getBoard(id: string) {
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to get board: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to get board: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -281,10 +268,7 @@ export async function getBoard(id: string) {
  * @returns {Promise<object>} The updated board
  * @throws {Error} If updating the board fails
  */
-export async function updateBoard(
-  id: string,
-  options: Partial<Omit<UpdateBoardOptions, "id">>,
-) {
+export async function updateBoard(id: string, options: Partial<Omit<UpdateBoardOptions, "id">>) {
   try {
     const response = await plankaRequest(`/api/boards/${id}`, {
       method: "PATCH",
@@ -294,7 +278,7 @@ export async function updateBoard(
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to update board: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to update board: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -314,8 +298,7 @@ export async function deleteBoard(id: string) {
     return { success: true };
   } catch (error) {
     throw new Error(
-      `Failed to delete board: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to delete board: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
-

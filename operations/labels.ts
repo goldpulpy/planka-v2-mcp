@@ -8,8 +8,8 @@
  */
 
 import { z } from "zod";
-import { plankaRequest } from "../common/utils.js";
 import { PlankaLabelSchema } from "../common/types.js";
+import { plankaRequest } from "../common/utils.js";
 
 /**
  * Valid color options for labels in Planka v2.0
@@ -56,7 +56,7 @@ export const VALID_LABEL_COLORS = [
   "french-coast",
   "sweet-lilac",
   "red-burgundy",
-  "pirate-gold"
+  "pirate-gold",
 ] as const;
 
 /**
@@ -134,7 +134,7 @@ export type AddLabelToCardOptions = z.infer<typeof AddLabelToCardSchema>;
 export type RemoveLabelFromCardOptions = z.infer<typeof RemoveLabelFromCardSchema>;
 
 // Response schemas
-const LabelsResponseSchema = z.object({
+const _LabelsResponseSchema = z.object({
   items: z.array(PlankaLabelSchema),
   included: z.record(z.any()).optional(),
 });
@@ -153,22 +153,19 @@ const LabelResponseSchema = z.object({
  */
 export async function createLabel(options: CreateLabelOptions) {
   try {
-    const response = await plankaRequest(
-      `/api/boards/${options.boardId}/labels`,
-      {
-        method: "POST",
-        body: {
-          name: options.name,
-          color: options.color,
-          position: options.position ?? 65535,
-        },
+    const response = await plankaRequest(`/api/boards/${options.boardId}/labels`, {
+      method: "POST",
+      body: {
+        name: options.name,
+        color: options.color,
+        position: options.position ?? 65535,
       },
-    );
+    });
     const parsedResponse = LabelResponseSchema.parse(response);
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to create label: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to create label: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -176,12 +173,14 @@ export async function createLabel(options: CreateLabelOptions) {
 export async function getLabels(boardId: string) {
   try {
     const response = await plankaRequest(`/api/boards/${boardId}`);
-    if (response && typeof response === "object" && (response as any).included && (response as any).included.labels) {
+    if (response && typeof response === "object" && (response as any).included?.labels) {
       return (response as any).included.labels;
     }
     return [];
   } catch (error: any) {
-    console.error(`Error getting labels for board ${boardId}: ${error?.message || "Unknown error"}`);
+    console.error(
+      `Error getting labels for board ${boardId}: ${error?.message || "Unknown error"}`,
+    );
     return [];
   }
 }
@@ -199,7 +198,7 @@ export async function getLabel(id: string) {
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to get label: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to get label: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -221,7 +220,7 @@ export async function updateLabel(id: string, options: Partial<Omit<UpdateLabelO
     return parsedResponse.item;
   } catch (error) {
     throw new Error(
-      `Failed to update label: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to update label: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -240,7 +239,7 @@ export async function deleteLabel(id: string) {
     return { success: true };
   } catch (error) {
     throw new Error(
-      `Failed to delete label: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to delete label: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -261,7 +260,7 @@ export async function addLabelToCard(cardId: string, labelId: string) {
     return { success: true };
   } catch (error) {
     throw new Error(
-      `Failed to add label to card: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to add label to card: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
@@ -281,8 +280,7 @@ export async function removeLabelFromCard(cardId: string, labelId: string) {
     return { success: true };
   } catch (error) {
     throw new Error(
-      `Failed to remove label from card: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to remove label from card: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
-
