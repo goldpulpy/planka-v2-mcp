@@ -1,6 +1,6 @@
 {
   "name": "@goldpulpy/planka-v2-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server for Planka v2.x Kanban board",
   "license": "MIT",
   "author": "goldpulpy <sawsani1928@gmail.com>",

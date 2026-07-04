@@ -17,14 +17,14 @@ Give your AI agents structured, secure access to projects, boards, cards, tasks,
       src="https://img.shields.io/npm/dm/%40goldpulpy%2Fplanka-v2-mcp"
     />
   </a>
-  <a href="https://github.com/goldpulpy/planka-v2-mcp/actions/workflows/ci.yaml">
+  <a href="https://github.com/goldpulpy/planka-v2-mcp/actions/workflows/ci.yml">
     <img
       alt="CI"
       src="https://img.shields.io/github/actions/workflow/status/goldpulpy/planka-v2-mcp/ci.yml?branch=main&label=CI"
     />
   </a>
   <a
-    href="https://github.com/goldpulpy/planka-v2-mcp/actions/workflows/cd.yaml"
+    href="https://github.com/goldpulpy/planka-v2-mcp/actions/workflows/cd.yml"
   >
     <img
       alt="CD"
