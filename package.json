@@ -35,6 +35,10 @@
     "format:fix": "biome format --write .",
     "typecheck": "tsc --noEmit",
     "qc": "npm run typecheck && npm run lint && npm run build && npm run test",
+    "planka:up": "docker compose -f dev/docker-compose.yml up -d",
+    "planka:down": "docker compose -f dev/docker-compose.yml down",
+    "planka:clear": "docker compose -f dev/docker-compose.yml down --volumes --remove-orphans",
+    "clear": "shx rm -rf dist node_modules",
     "prepublishOnly": "npm run qc"
   },
   "dependencies": {

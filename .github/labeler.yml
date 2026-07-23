@@ -1,42 +1,44 @@
 tests:
   - changed-files:
       - any-glob-to-any-file:
-          - '**/*.test.ts'
-          - '**/*.test.tsx'
+          - "tests/**"
 
 documentation:
   - changed-files:
       - any-glob-to-any-file:
-          - '**/*.md'
-          - '**/*.mdx'
+          - "README.md"
+          - "SECURITY.md"
+          - "CONTRIBUTING.md"
+          - "AGENTS.md"
+          - "openspec/**"
 
 dependencies:
   - changed-files:
       - any-glob-to-any-file:
-          - '**/package.json'
-          - '**/package-lock.json'
-          - '**/yarn.lock'
-          - '**/pnpm-lock.yaml'
+          - "**/package.json"
+          - "**/package-lock.json"
+          - "**/yarn.lock"
+          - "**/pnpm-lock.yaml"
 
 ci:
   - changed-files:
       - any-glob-to-any-file:
-          - '.github/workflows/**'
-          - '.github/*.yml'
-          - '.github/*.yaml'
+          - ".github/workflows/**"
+          - ".github/*.yml"
+          - ".github/*.yaml"
 
 typescript:
   - changed-files:
       - any-glob-to-any-file:
-          - '**/*.ts'
-          - '**/*.tsx'
-          - '**/tsconfig.json'
+          - "**/*.ts"
+          - "**/*.tsx"
+          - "**/tsconfig.json"
 
 config:
   - changed-files:
       - any-glob-to-any-file:
-          - '**/*.config.js'
-          - '**/*.config.ts'
-          - '**/*.setup.ts'
-          - '**/*.setup.js'
-          - '**/biome.json'
+          - "**/*.config.js"
+          - "**/*.config.ts"
+          - "**/*.setup.ts"
+          - "**/*.setup.js"
+          - "**/biome.json"
