@@ -1,0 +1,12 @@
+interface:
+  display_name: "Create GitHub Pull Request"
+  short_description: "Prepare and create review-ready GitHub PRs"
+  default_prompt: "Use $gh-create-pull-request to create a pull request for my current branch."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "github"
+      description: "GitHub MCP server for pull request operations"
+      transport: "streamable_http"
+      url: "https://api.githubcopilot.com/mcp/"
