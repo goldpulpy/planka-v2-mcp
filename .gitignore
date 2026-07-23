@@ -1,4 +1,5 @@
 dist/
+.seed-dist/
 coverage/
 node_modules/
 .cursorrules

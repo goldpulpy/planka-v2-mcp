@@ -231,17 +231,27 @@ export async function createBoard(options: CreateBoardOptions) {
  */
 export async function getBoards(projectId: string) {
   try {
-    const response = await plankaRequest(`/api/projects/${projectId}`);
-
-    if (response && typeof response === "object" && (response as any).included?.boards) {
-      return (response as any).included.boards;
-    }
-
-    return [];
+    return await getBoardsStrict(projectId);
   } catch (error) {
     console.error(`Error getting boards for project ${projectId}:`, error);
     return [];
   }
+}
+
+/**
+ * Retrieves all boards for a project and propagates request failures.
+ *
+ * Use this variant when an empty result and a failed lookup must remain
+ * distinguishable, such as duplicate checks before creating a board.
+ */
+export async function getBoardsStrict(projectId: string) {
+  const response = await plankaRequest(`/api/projects/${projectId}`);
+
+  if (response && typeof response === "object" && (response as any).included?.boards) {
+    return (response as any).included.boards;
+  }
+
+  return [];
 }
 
 /**

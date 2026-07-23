@@ -423,6 +423,39 @@ through the browser and accept the terms of service before using the account wit
 MCP server. Stop the instance while preserving its data with `npm run planka:down`,
 or stop it and delete its volumes with `npm run planka:clear`.
 
+### Seed a Demo Board
+
+The development-only seed command creates a representative board for local testing and
+demonstrations. Install the project dependencies and configure `.env` with a reachable Planka v2
+instance and valid `PLANKA_BASE_URL`, `PLANKA_AGENT_EMAIL`, and `PLANKA_AGENT_PASSWORD` values
+before running it.
+
+```bash
+# Reuse or create the private "Demo Project", then create "Demo Board"
+npm run seed
+
+# Seed an existing project
+npm run seed -- --project-id <project-id>
+
+# Choose a different board name
+npm run seed -- --project-id <project-id> --board-name "My Demo Board"
+
+# Show all options
+npm run seed -- --help
+```
+
+The board includes cards across the default workflow lists, descriptions, relative due dates,
+Planka labels used as tags, task lists, completed and incomplete tasks, and comments. The command
+prints the project ID, board ID, board name, and resource counts when it succeeds.
+
+The seed command refuses to modify a project that already contains a board with the exact requested
+name; use `--board-name` to choose another name. If an error occurs after board creation, the command
+reports the failed stage and board ID and leaves the partially populated board available for
+inspection. Delete that board in Planka before retrying with the same name.
+
+The seed source and its separately compiled `.seed-dist/` output are development-only and are not
+included in the MCP server build or published package.
+
 ## Contributing
 
 Contributions are welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md) for details.

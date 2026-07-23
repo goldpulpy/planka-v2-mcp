@@ -103,6 +103,12 @@ describe("board operations", () => {
     await expect(boards.getBoards("project-1")).resolves.toEqual([]);
   });
 
+  test("getBoardsStrict propagates request failures", async () => {
+    plankaRequest.mockRejectedValueOnce(new Error("offline"));
+
+    await expect(boards.getBoardsStrict("project-1")).rejects.toThrow("offline");
+  });
+
   test("get, update, and delete board use board endpoints", async () => {
     plankaRequest
       .mockResolvedValueOnce({ item: board })

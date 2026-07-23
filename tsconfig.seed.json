@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./.seed-dist"
+  },
+  "include": ["scripts/seed.ts"],
+  "exclude": ["node_modules", "tests", "dist", ".seed-dist"]
+}

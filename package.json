@@ -23,7 +23,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc && shx chmod +x dist/*.js",
+    "build": "shx rm -rf dist && tsc && shx chmod +x dist/*.js",
     "watch": "tsc --watch",
     "inspector": "cross-env SERVER_PORT=3008 CLIENT_PORT=5174 DOTENV_CONFIG_PATH=.env npx -y @modelcontextprotocol/inspector node -r dotenv/config dist/index.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests --testPathIgnorePatterns=tests/integration.test.ts",
@@ -35,10 +35,11 @@
     "format:fix": "biome format --write .",
     "typecheck": "tsc --noEmit",
     "qc": "npm run typecheck && npm run lint && npm run build && npm run test",
+    "seed": "shx rm -rf .seed-dist && tsc -p tsconfig.seed.json && shx cp scripts/seed-cards.json .seed-dist/scripts/seed-cards.json && node -r dotenv/config .seed-dist/scripts/seed.js",
     "planka:up": "docker compose -f dev/docker-compose.yml up -d",
     "planka:down": "docker compose -f dev/docker-compose.yml down",
     "planka:clear": "docker compose -f dev/docker-compose.yml down --volumes --remove-orphans",
-    "clear": "shx rm -rf dist node_modules",
+    "clear": "shx rm -rf dist .seed-dist node_modules",
     "prepublishOnly": "npm run qc"
   },
   "dependencies": {

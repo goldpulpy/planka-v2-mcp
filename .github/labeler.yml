@@ -9,8 +9,6 @@ documentation:
           - "README.md"
           - "SECURITY.md"
           - "CONTRIBUTING.md"
-          - "AGENTS.md"
-          - "openspec/**"
 
 dependencies:
   - changed-files:
@@ -33,6 +31,7 @@ typescript:
           - "**/*.ts"
           - "**/*.tsx"
           - "**/tsconfig.json"
+          - "**/tsconfig.*.json"
 
 config:
   - changed-files:
