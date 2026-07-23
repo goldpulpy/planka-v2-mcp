@@ -1,0 +1,802 @@
+[
+  {
+    "listName": "Backlog",
+    "name": "Q2 Platform Migration",
+    "type": "project",
+    "description": "Migrate the core platform infrastructure to the new Kubernetes-based architecture. This includes service mesh integration, traffic shifting, and gradual rollout.",
+    "dueDateOffsetDays": 60,
+    "labelNames": ["Feature", "P2: Medium"],
+    "taskLists": [
+      {
+        "name": "Migration Steps",
+        "tasks": [
+          { "name": "Audit existing services", "isCompleted": true },
+          { "name": "Design target architecture", "isCompleted": false },
+          { "name": "Create migration runbook", "isCompleted": false },
+          { "name": "Set up canary deployments", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "Need to coordinate with the SRE team on this.",
+      "Blocked until the network security review is complete."
+    ]
+  },
+  {
+    "listName": "To Do",
+    "name": "Add OAuth2 Login",
+    "type": "story",
+    "description": "Implement OAuth2 authentication flow with support for Google and GitHub providers. Must include refresh token handling and session management.",
+    "dueDateOffsetDays": 14,
+    "labelNames": ["Feature", "P1: High"],
+    "taskLists": [],
+    "comments": []
+  },
+  {
+    "listName": "In Progress",
+    "name": "Refactor API Gateway",
+    "type": "project",
+    "description": "Refactor the API gateway to use the new middleware pipeline architecture. This will improve request processing performance and make it easier to add new middleware components.",
+    "dueDateOffsetDays": 21,
+    "labelNames": ["Enhancement", "P1: High"],
+    "taskLists": [
+      {
+        "name": "Refactoring Tasks",
+        "tasks": [
+          { "name": "Extract rate-limiting middleware", "isCompleted": true },
+          { "name": "Refactor auth middleware", "isCompleted": true },
+          { "name": "Add request logging pipeline", "isCompleted": false },
+          { "name": "Update unit tests", "isCompleted": false },
+          { "name": "Performance benchmarking", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "The auth middleware change is already done. Moving on to logging.",
+      "Need to discuss the new middleware ordering with the team."
+    ]
+  },
+  {
+    "listName": "On Hold",
+    "name": "Database Sharding Plan",
+    "type": "project",
+    "description": "Design and implement a database sharding strategy for the main application database. Currently blocked pending infrastructure capacity planning.",
+    "dueDateOffsetDays": 45,
+    "labelNames": ["Blocked", "Documentation", "P2: Medium"],
+    "taskLists": [
+      {
+        "name": "Planning",
+        "tasks": [
+          { "name": "Analyze data distribution patterns", "isCompleted": true },
+          { "name": "Design shard key strategy", "isCompleted": true },
+          { "name": "Document migration procedure", "isCompleted": false },
+          { "name": "Plan rollback strategy", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": ["Waiting on DevOps to provide the new cluster specs."]
+  },
+  {
+    "listName": "Review",
+    "name": "Update User Dashboard",
+    "type": "project",
+    "description": "Revamp the user dashboard with new analytics widgets and improved data visualization. Includes new chart components and export functionality.",
+    "dueDateOffsetDays": 7,
+    "labelNames": ["Feature", "Ready", "P3: Low"],
+    "taskLists": [
+      {
+        "name": "Review Checklist",
+        "tasks": [
+          { "name": "Code review widget components", "isCompleted": true },
+          { "name": "Verify data accuracy", "isCompleted": false },
+          { "name": "Test export functionality", "isCompleted": false },
+          { "name": "Update Storybook stories", "isCompleted": true }
+        ]
+      }
+    ],
+    "comments": [
+      "Widget components look good. Ready for QA on the export feature."
+    ]
+  },
+  {
+    "listName": "Done",
+    "name": "Fix Login Timeout",
+    "type": "project",
+    "description": "Fix the login session timeout issue affecting users with expired tokens. The root cause was an incorrect TTL check in the session validator.",
+    "labelNames": ["Bug", "P0: Critical"],
+    "taskLists": [
+      {
+        "name": "Fixes Applied",
+        "tasks": [
+          {
+            "name": "Fix TTL comparison in session validator",
+            "isCompleted": true
+          },
+          { "name": "Add session refresh logging", "isCompleted": true },
+          { "name": "Write regression test", "isCompleted": true }
+        ]
+      }
+    ],
+    "comments": [
+      "Fix deployed to production. Monitoring shows no recurrence.",
+      "Root cause documented in the incident report."
+    ]
+  },
+  {
+    "listName": "Backlog",
+    "name": "Implement Dark Mode",
+    "type": "project",
+    "description": "Add dark mode support across the entire application. Should respect system preferences and allow manual override via a toggle in user settings.",
+    "dueDateOffsetDays": 90,
+    "labelNames": ["Feature", "Enhancement", "P3: Low"],
+    "taskLists": [
+      {
+        "name": "Design",
+        "tasks": [
+          { "name": "Define dark mode color palette", "isCompleted": false },
+          { "name": "Update design system tokens", "isCompleted": false },
+          { "name": "Create dark mode mockups", "isCompleted": true }
+        ]
+      },
+      {
+        "name": "Implementation",
+        "tasks": [
+          { "name": "Implement CSS variable theming", "isCompleted": false },
+          { "name": "Add system preference detection", "isCompleted": false },
+          { "name": "Build settings toggle UI", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "Design team has signed off on the palette.",
+      "Need to audit all existing components for contrast issues."
+    ]
+  },
+  {
+    "listName": "Backlog",
+    "name": "Webhook Integration System",
+    "type": "project",
+    "description": "Build a webhook system that allows external services to subscribe to application events. Must include retry logic, delivery logs, and a secret signing mechanism.",
+    "dueDateOffsetDays": 45,
+    "labelNames": ["Feature", "P2: Medium"],
+    "taskLists": [
+      {
+        "name": "Core",
+        "tasks": [
+          { "name": "Design webhook event schema", "isCompleted": false },
+          { "name": "Implement delivery queue", "isCompleted": false },
+          { "name": "Add HMAC signature verification", "isCompleted": false },
+          { "name": "Build retry with exponential backoff", "isCompleted": false },
+          { "name": "Create delivery log viewer", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": []
+  },
+  {
+    "listName": "To Do",
+    "name": "Upgrade Node.js to v22",
+    "type": "project",
+    "description": "Update the project to use Node.js v22 LTS. This involves updating the Docker base images, CI pipelines, and verifying compatibility of all dependencies.",
+    "dueDateOffsetDays": 10,
+    "labelNames": ["Enhancement", "P2: Medium"],
+    "taskLists": [
+      {
+        "name": "Upgrade Steps",
+        "tasks": [
+          { "name": "Update Dockerfile base image", "isCompleted": false },
+          { "name": "Update CI runner images", "isCompleted": false },
+          { "name": "Run full test suite", "isCompleted": false },
+          { "name": "Verify dependency compatibility", "isCompleted": true }
+        ]
+      }
+    ],
+    "comments": [
+      "All dependencies checked. Only needs Docker and CI updates."
+    ]
+  },
+  {
+    "listName": "To Do",
+    "name": "Add Email Notification Templates",
+    "type": "project",
+    "description": "Create HTML email templates for all notification types: welcome email, password reset, weekly digest, and alert notifications. Must support both plain text and HTML formats.",
+    "dueDateOffsetDays": 21,
+    "labelNames": ["Feature", "Enhancement", "P1: High"],
+    "taskLists": [
+      {
+        "name": "Templates",
+        "tasks": [
+          { "name": "Design welcome email template", "isCompleted": true },
+          { "name": "Build password reset template", "isCompleted": false },
+          { "name": "Create weekly digest layout", "isCompleted": false },
+          { "name": "Add alert notification template", "isCompleted": false },
+          { "name": "Test rendering across email clients", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "Litmus test results are in — Gmail and Outlook have rendering quirks.",
+      "Waiting on final copy from the marketing team."
+    ]
+  },
+  {
+    "listName": "In Progress",
+    "name": "Performance Audit & Optimization",
+    "type": "project",
+    "description": "Conduct a thorough performance audit of the frontend application. Measure Core Web Vitals, identify bottlenecks, and implement targeted optimizations.",
+    "dueDateOffsetDays": 14,
+    "labelNames": ["Enhancement", "P1: High"],
+    "taskLists": [
+      {
+        "name": "Audit",
+        "tasks": [
+          { "name": "Run Lighthouse CI on all pages", "isCompleted": true },
+          { "name": "Profile bundle with webpack-bundle-analyzer", "isCompleted": true },
+          { "name": "Analyze database query performance", "isCompleted": false }
+        ]
+      },
+      {
+        "name": "Optimizations",
+        "tasks": [
+          { "name": "Implement code splitting for routes", "isCompleted": false },
+          { "name": "Add lazy loading for images", "isCompleted": false },
+          { "name": "Optimize GraphQL query batching", "isCompleted": false },
+          { "name": "Add CDN caching headers", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "Lighthouse scores improved from 62 to 88 on mobile after initial fixes.",
+      "Need to investigate the slow queries on the dashboard endpoint."
+    ]
+  },
+  {
+    "listName": "In Progress",
+    "name": "API Rate Limiting v2",
+    "type": "project",
+    "description": "Replace the current basic rate limiter with a distributed token-bucket implementation using Redis. Add per-endpoint limits and clearer rate limit headers.",
+    "dueDateOffsetDays": 5,
+    "labelNames": ["Feature", "P0: Critical"],
+    "taskLists": [
+      {
+        "name": "Implementation",
+        "tasks": [
+          { "name": "Set up Redis-backed token bucket", "isCompleted": true },
+          { "name": "Define per-endpoint rate limit configs", "isCompleted": true },
+          { "name": "Add RateLimit-Remaining headers", "isCompleted": false },
+          { "name": "Write integration tests", "isCompleted": false },
+          { "name": "Update API documentation", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "Redis cluster is already set up in staging. Ready for testing.",
+      "Remember to document the new headers in the developer portal."
+    ]
+  },
+  {
+    "listName": "On Hold",
+    "name": "Mobile App v2",
+    "type": "project",
+    "description": "Develop version 2 of the mobile application with offline support, push notifications, and a redesigned navigation system. Blocked pending the design system audit.",
+    "dueDateOffsetDays": 120,
+    "labelNames": ["Blocked", "Feature", "P3: Low"],
+    "taskLists": [
+      {
+        "name": "Planning",
+        "tasks": [
+          { "name": "Finalize mobile design system", "isCompleted": true },
+          { "name": "Set up React Native project", "isCompleted": true },
+          { "name": "Implement offline-first data layer", "isCompleted": false },
+          { "name": "Design push notification architecture", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "Design system audit is expected to complete in Q3.",
+      "We should evaluate Expo vs bare React Native before proceeding."
+    ]
+  },
+  {
+    "listName": "On Hold",
+    "name": "GDPR Compliance Module",
+    "type": "project",
+    "description": "Implement GDPR compliance features: data export/delete flows, consent management, and privacy policy versioning. On hold pending legal review of the data retention policy.",
+    "dueDateOffsetDays": 60,
+    "labelNames": ["Blocked", "Feature", "P1: High"],
+    "taskLists": [
+      {
+        "name": "Compliance Features",
+        "tasks": [
+          { "name": "Build data export endpoint", "isCompleted": false },
+          { "name": "Build account deletion flow", "isCompleted": false },
+          { "name": "Add consent banner component", "isCompleted": true },
+          { "name": "Implement consent audit log", "isCompleted": false },
+          { "name": "Create privacy policy versioning system", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "Consent banner is ready but legal hasn't approved the copy yet.",
+      "Data retention policy draft is with the legal team."
+    ]
+  },
+  {
+    "listName": "Review",
+    "name": "Search Autocomplete Feature",
+    "type": "project",
+    "description": "Add an autocomplete dropdown to the global search bar. Should index recent searches and suggest results from users, projects, and documents.",
+    "dueDateOffsetDays": 3,
+    "labelNames": ["Feature", "Ready", "P2: Medium"],
+    "taskLists": [
+      {
+        "name": "Review Checklist",
+        "tasks": [
+          { "name": "Review autocomplete component code", "isCompleted": true },
+          { "name": "Verify search index updates", "isCompleted": true },
+          { "name": "Test keyboard navigation", "isCompleted": false },
+          { "name": "Audit for accessibility compliance", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "Keyboard navigation works well. Still need to test with screen readers.",
+      "Search indexing performance looks good — no regression."
+    ]
+  },
+  {
+    "listName": "Review",
+    "name": "CSV Export Enhancement",
+    "type": "project",
+    "description": "Enhance the CSV export to support custom field selection, date range filtering, and large dataset streaming. Existing implementation blocks the event loop for large exports.",
+    "dueDateOffsetDays": 2,
+    "labelNames": ["Enhancement", "Ready", "P2: Medium"],
+    "taskLists": [
+      {
+        "name": "Review Checklist",
+        "tasks": [
+          { "name": "Review streaming implementation", "isCompleted": true },
+          { "name": "Verify field selection UI", "isCompleted": true },
+          { "name": "Test with 100k+ row datasets", "isCompleted": false },
+          { "name": "Check memory usage benchmarks", "isCompleted": true }
+        ]
+      }
+    ],
+    "comments": [
+      "Streaming approach resolved the memory issue. Benchmarks look solid.",
+      "Need final sign-off from the data team on the output format."
+    ]
+  },
+  {
+    "listName": "Done",
+    "name": "Environment Variable Validation",
+    "type": "project",
+    "description": "Add startup-time validation for all required environment variables with clear error messages. Prevents silent failures in production due to misconfiguration.",
+    "labelNames": ["Enhancement", "P2: Medium"],
+    "taskLists": [
+      {
+        "name": "Validation",
+        "tasks": [
+          { "name": "Define validation schema with Zod", "isCompleted": true },
+          { "name": "Add startup check hook", "isCompleted": true },
+          { "name": "Write clear error messages for each var", "isCompleted": true },
+          { "name": "Add tests for validation logic", "isCompleted": true }
+        ]
+      }
+    ],
+    "comments": [
+      "Deployed. Caught a missing DATABASE_URL in staging within minutes."
+    ]
+  },
+  {
+    "listName": "Done",
+    "name": "Replace Moment.js with date-fns",
+    "type": "project",
+    "description": "Replace Moment.js with date-fns to reduce bundle size by ~150KB gzipped. Update all date formatting and manipulation imports across the codebase.",
+    "labelNames": ["Enhancement", "P3: Low"],
+    "taskLists": [
+      {
+        "name": "Migration",
+        "tasks": [
+          { "name": "Install date-fns and remove moment", "isCompleted": true },
+          { "name": "Update date formatting utilities", "isCompleted": true },
+          { "name": "Migrate all component imports", "isCompleted": true },
+          { "name": "Verify date rendering across timezones", "isCompleted": true }
+        ]
+      }
+    ],
+    "comments": [
+      "Bundle size reduced by 148KB. All date formats verified."
+    ]
+  },
+  {
+    "listName": "Done",
+    "name": "Dependency Vulnerability Remediation",
+    "type": "project",
+    "description": "Address critical and high-severity vulnerabilities identified by npm audit. Upgrade or replace affected packages and verify no breaking changes were introduced.",
+    "labelNames": ["Enhancement", "P0: Critical"],
+    "taskLists": [
+      {
+        "name": "Remediation",
+        "tasks": [
+          { "name": "Audit all direct dependencies", "isCompleted": true },
+          { "name": "Upgrade express to v5", "isCompleted": true },
+          { "name": "Replace deprecated request library", "isCompleted": true },
+          { "name": "Verify no breaking changes in upgraded pkgs", "isCompleted": true }
+        ]
+      }
+    ],
+    "comments": [
+      "All critical vulnerabilities resolved. Express v5 migration was smooth."
+    ]
+  },
+  {
+    "listName": "Backlog",
+    "name": "Multi-Tenant Support",
+    "type": "project",
+    "description": "Design and implement multi-tenant architecture with isolated data per organization. Includes tenant provisioning, migration strategy, and billing integration.",
+    "dueDateOffsetDays": 120,
+    "labelNames": ["Feature", "P3: Low"],
+    "taskLists": [
+      {
+        "name": "Architecture",
+        "tasks": [
+          { "name": "Evaluate tenant isolation strategies", "isCompleted": false },
+          { "name": "Design tenant schema migration", "isCompleted": false },
+          { "name": "Plan cross-tenant analytics", "isCompleted": false },
+          { "name": "Design provisioning API", "isCompleted": false }
+        ]
+      },
+      {
+        "name": "Implementation",
+        "tasks": [
+          { "name": "Add tenant context middleware", "isCompleted": false },
+          { "name": "Scope queries to current tenant", "isCompleted": false },
+          { "name": "Build admin tenant management UI", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": ["Requires significant database changes. Needs architecture review."]
+  },
+  {
+    "listName": "Backlog",
+    "name": "Real-Time Collaboration",
+    "type": "project",
+    "description": "Add real-time collaborative editing with WebSocket-based sync. Support presence indicators, live cursors, and conflict resolution using CRDTs.",
+    "dueDateOffsetDays": 90,
+    "labelNames": ["Feature", "P2: Medium"],
+    "taskLists": [
+      {
+        "name": "Foundation",
+        "tasks": [
+          { "name": "Set up WebSocket server", "isCompleted": false },
+          { "name": "Implement presence tracking", "isCompleted": false },
+          { "name": "Integrate Yjs CRDT library", "isCompleted": false },
+          { "name": "Build awareness indicator UI", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "Yjs seems like the best fit. Need to evaluate sync server options.",
+      "Should we use a managed service or self-host the sync server?"
+    ]
+  },
+  {
+    "listName": "Backlog",
+    "name": "Internationalization (i18n)",
+    "type": "project",
+    "description": "Add full internationalization support starting with Japanese, Spanish, and German. Must support RTL languages, locale-aware date/number formatting, and dynamic language switching.",
+    "dueDateOffsetDays": 75,
+    "labelNames": ["Feature", "Enhancement", "P2: Medium"],
+    "taskLists": [
+      {
+        "name": "Setup",
+        "tasks": [
+          { "name": "Choose i18n library", "isCompleted": true },
+          { "name": "Extract all hardcoded strings", "isCompleted": false },
+          { "name": "Set up translation management", "isCompleted": false },
+          { "name": "Implement locale switching UI", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "react-i18next chosen. Need to set up the translation pipeline.",
+      "Japanese translation vendor has been contacted."
+    ]
+  },
+  {
+    "listName": "To Do",
+    "name": "Migrate to Vite",
+    "type": "project",
+    "description": "Replace the current Webpack build system with Vite for faster development HMR and improved production builds. Must maintain existing build outputs and CI integration.",
+    "dueDateOffsetDays": 14,
+    "labelNames": ["Enhancement", "P1: High"],
+    "taskLists": [
+      {
+        "name": "Migration Steps",
+        "tasks": [
+          { "name": "Install and configure Vite", "isCompleted": false },
+          { "name": "Migrate Webpack plugins", "isCompleted": false },
+          { "name": "Update CI build scripts", "isCompleted": false },
+          { "name": "Verify production output parity", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "HMR speed improvement is dramatic in the prototype.",
+      "Need to handle the custom SVG sprite loader — no direct Vite equivalent."
+    ]
+  },
+  {
+    "listName": "To Do",
+    "name": "SSO Integration (SAML)",
+    "type": "project",
+    "description": "Add SAML 2.0 single sign-on support for enterprise customers. Must handle IdP-initiated and SP-initiated flows with automatic user provisioning.",
+    "dueDateOffsetDays": 30,
+    "labelNames": ["Feature", "P1: High"],
+    "taskLists": [
+      {
+        "name": "Implementation",
+        "tasks": [
+          { "name": "Research SAML libraries", "isCompleted": true },
+          { "name": "Implement SP metadata endpoint", "isCompleted": false },
+          { "name": "Build ACS endpoint handler", "isCompleted": false },
+          { "name": "Add automatic user provisioning", "isCompleted": false },
+          { "name": "Support multiple IdP configs", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "Three enterprise customers are waiting on this feature.",
+      "Okta and Azure AD are the primary IdPs to target."
+    ]
+  },
+  {
+    "listName": "To Do",
+    "name": "Audit Logging System",
+    "type": "project",
+    "description": "Implement a comprehensive audit logging system to track all user and system actions. Must include searchable log viewer, retention policies, and export capabilities.",
+    "dueDateOffsetDays": 21,
+    "labelNames": ["Feature", "P2: Medium"],
+    "taskLists": [
+      {
+        "name": "Audit System",
+        "tasks": [
+          { "name": "Define audit event schema", "isCompleted": false },
+          { "name": "Create audit log middleware", "isCompleted": false },
+          { "name": "Build log viewer UI with filters", "isCompleted": false },
+          { "name": "Add retention policy engine", "isCompleted": false },
+          { "name": "Implement CSV/JSON export", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "Compliance requirement for SOC2. Need this by end of quarter."
+    ]
+  },
+  {
+    "listName": "In Progress",
+    "name": "REST API v2 Deprecation",
+    "type": "project",
+    "description": "Deprecate the v1 REST API and migrate all consumers to v2. Maintain backward compatibility with sunset headers and a migration guide.",
+    "dueDateOffsetDays": 30,
+    "labelNames": ["Enhancement", "P1: High"],
+    "taskLists": [
+      {
+        "name": "Deprecation",
+        "tasks": [
+          { "name": "Audit v1 API consumers", "isCompleted": true },
+          { "name": "Add Sunset and Deprecation headers", "isCompleted": true },
+          { "name": "Contact active API consumers", "isCompleted": false },
+          { "name": "Publish migration guide", "isCompleted": false },
+          { "name": "Schedule v1 shutdown date", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "Three internal services still using v1. Migration planned for next sprint.",
+      "Sunset headers have been active for 2 weeks. No issues reported."
+    ]
+  },
+  {
+    "listName": "In Progress",
+    "name": "Notification Preferences UI",
+    "type": "project",
+    "description": "Build a notification preferences page that lets users control which events trigger notifications and which channels (email, in-app, push) they receive.",
+    "dueDateOffsetDays": 7,
+    "labelNames": ["Feature", "Enhancement", "P2: Medium"],
+    "taskLists": [
+      {
+        "name": "UI Components",
+        "tasks": [
+          { "name": "Design preferences layout", "isCompleted": true },
+          { "name": "Build notification category toggles", "isCompleted": true },
+          { "name": "Add channel selection per event", "isCompleted": false },
+          { "name": "Implement save and preview", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "Design is approved. Working on the save integration.",
+      "Need to connect to the notification service for channel validation."
+    ]
+  },
+  {
+    "listName": "On Hold",
+    "name": "Kubernetes Migration",
+    "type": "project",
+    "description": "Migrate all production services from Docker Compose to Kubernetes. Includes Helm chart creation, service mesh setup, and gradual traffic shifting.",
+    "dueDateOffsetDays": 45,
+    "labelNames": ["Blocked", "Enhancement", "P1: High"],
+    "taskLists": [
+      {
+        "name": "Migration",
+        "tasks": [
+          { "name": "Create Helm charts for all services", "isCompleted": true },
+          { "name": "Set up staging K8s cluster", "isCompleted": true },
+          { "name": "Configure external DNS and certs", "isCompleted": false },
+          { "name": "Migrate CI/CD pipelines", "isCompleted": false },
+          { "name": "Set up monitoring stack", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "Staging cluster is provisioned. Blocked on network policy review.",
+      "Helm charts are ready. Need to test the rollout strategy."
+    ]
+  },
+  {
+    "listName": "On Hold",
+    "name": "SOC2 Compliance Certification",
+    "type": "project",
+    "description": "Achieve SOC2 Type II certification. Requires security policy documentation, access control reviews, vulnerability management program, and third-party auditor engagement.",
+    "dueDateOffsetDays": 180,
+    "labelNames": ["Blocked", "Documentation", "P1: High"],
+    "taskLists": [
+      {
+        "name": "Preparation",
+        "tasks": [
+          { "name": "Document security policies", "isCompleted": true },
+          { "name": "Implement access review process", "isCompleted": true },
+          { "name": "Deploy vulnerability scanner", "isCompleted": false },
+          { "name": "Engage third-party auditor", "isCompleted": false },
+          { "name": "Run gap analysis", "isCompleted": false }
+        ]
+      }
+    ],
+    "comments": [
+      "Policy docs are drafted. Awaiting legal review before auditor engagement.",
+      "Vulnerability scanner selection is in progress."
+    ]
+  },
+  {
+    "listName": "Review",
+    "name": "File Upload Limit Increase",
+    "type": "project",
+    "description": "Increase the maximum file upload size from 10MB to 50MB. Requires updating the frontend uploader, API validation, and adding chunked upload support for large files.",
+    "dueDateOffsetDays": 1,
+    "labelNames": ["Enhancement", "Ready", "P2: Medium"],
+    "taskLists": [
+      {
+        "name": "Review Checklist",
+        "tasks": [
+          { "name": "Review chunked upload implementation", "isCompleted": true },
+          { "name": "Verify max size validation on backend", "isCompleted": true },
+          { "name": "Test with 50MB sample files", "isCompleted": false },
+          { "name": "Check S3 multipart upload config", "isCompleted": true }
+        ]
+      }
+    ],
+    "comments": [
+      "Chunked upload works well. Need to verify the progress bar accuracy.",
+      "Should we also add a file type whitelist while we're at it?"
+    ]
+  },
+  {
+    "listName": "Review",
+    "name": "Error Boundary Refactor",
+    "type": "project",
+    "description": "Refactor React error boundaries to provide granular fallback UIs per feature module. Include error reporting integration and recovery actions.",
+    "dueDateOffsetDays": 2,
+    "labelNames": ["Enhancement", "Ready", "P1: High"],
+    "taskLists": [
+      {
+        "name": "Review Checklist",
+        "tasks": [
+          { "name": "Review feature-level boundary separation", "isCompleted": true },
+          { "name": "Verify Sentry integration", "isCompleted": true },
+          { "name": "Test recovery action flows", "isCompleted": false },
+          { "name": "Check fallback UI rendering", "isCompleted": true }
+        ]
+      }
+    ],
+    "comments": [
+      "Granular boundaries prevent entire app crashes. Recovery flows need QA."
+    ]
+  },
+  {
+    "listName": "Done",
+    "name": "CI/CD Pipeline Optimization",
+    "type": "project",
+    "description": "Optimize the CI/CD pipeline to reduce build times. Implemented dependency caching, parallel job execution, and conditional test stages.",
+    "labelNames": ["Enhancement", "P2: Medium"],
+    "taskLists": [
+      {
+        "name": "Optimizations",
+        "tasks": [
+          { "name": "Add npm cache layer", "isCompleted": true },
+          { "name": "Parallelize test suites", "isCompleted": true },
+          { "name": "Add conditional build stages", "isCompleted": true },
+          { "name": "Set up build timeout alerts", "isCompleted": true }
+        ]
+      }
+    ],
+    "comments": [
+      "Build time reduced from 12 minutes to 4 minutes. Great win."
+    ]
+  },
+  {
+    "listName": "Done",
+    "name": "API Documentation Generator",
+    "type": "project",
+    "description": "Set up an OpenAPI/Swagger documentation generator that auto-generates API docs from the codebase. Integrated into the CI pipeline to keep docs in sync.",
+    "labelNames": ["Feature", "Documentation", "P3: Low"],
+    "taskLists": [
+      {
+        "name": "Setup",
+        "tasks": [
+          { "name": "Add OpenAPI annotations to routes", "isCompleted": true },
+          { "name": "Configure swagger-ui-express", "isCompleted": true },
+          { "name": "Auto-deploy docs with CI", "isCompleted": true },
+          { "name": "Add examples for all endpoints", "isCompleted": true }
+        ]
+      }
+    ],
+    "comments": [
+      "Auto-generated docs are live at /api-docs. Team loves it."
+    ]
+  },
+  {
+    "listName": "Done",
+    "name": "Database Connection Pool Tuning",
+    "type": "project",
+    "description": "Tune the PostgreSQL connection pool settings to prevent connection exhaustion under load. Adjusted pool size, idle timeout, and added connection monitoring.",
+    "labelNames": ["Enhancement", "P1: High"],
+    "taskLists": [
+      {
+        "name": "Tuning",
+        "tasks": [
+          { "name": "Analyze connection usage patterns", "isCompleted": true },
+          { "name": "Adjust pool min/max settings", "isCompleted": true },
+          { "name": "Add connection metrics dashboard", "isCompleted": true },
+          { "name": "Load test with peak traffic patterns", "isCompleted": true }
+        ]
+      }
+    ],
+    "comments": [
+      "Connection exhaustion eliminated. Dashboard shows healthy pool utilization."
+    ]
+  },
+  {
+    "listName": "Done",
+    "name": "Session Management Refactor",
+    "type": "project",
+    "description": "Refactor session management to use Redis-backed sessions with automatic expiration and rotation. Replaced the previous in-memory store that didn't scale across instances.",
+    "labelNames": ["Enhancement", "P1: High"],
+    "taskLists": [
+      {
+        "name": "Refactoring",
+        "tasks": [
+          { "name": "Set up Redis session store", "isCompleted": true },
+          { "name": "Implement session rotation", "isCompleted": true },
+          { "name": "Add concurrent session limit", "isCompleted": true },
+          { "name": "Write session migration script", "isCompleted": true }
+        ]
+      }
+    ],
+    "comments": [
+      "Zero downtime migration completed. Sessions now survive restarts.",
+      "Concurrent session limit working well in production."
+    ]
+  }
+]

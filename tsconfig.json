@@ -16,5 +16,5 @@
     "exactOptionalPropertyTypes": true
   },
   "include": ["./**/*.ts"],
-  "exclude": ["node_modules", "tests", "dist"]
+  "exclude": ["node_modules", "tests", "scripts", "dist", ".seed-dist"]
 }

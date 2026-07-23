@@ -35,6 +35,6 @@
     }
   },
   "files": {
-    "includes": ["**/*.ts", "**/*.js", "!!**/dist", "!!**/coverage"]
+    "includes": ["**/*.ts", "**/*.js", "!!**/dist", "!!**/.seed-dist", "!!**/coverage"]
   }
 }
