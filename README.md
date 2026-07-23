@@ -401,12 +401,22 @@ npm install
 # Configure environment variables
 cp .env.example .env
 
+# Start the bundled Planka development instance
+npm run planka:up
+
 # Build the project
 npm run build
 
 # Run @modelcontextprotocol/inspector
 npm run inspector
 ```
+
+The development instance requires Docker Compose and is available at
+`http://localhost:3000` (login: `admin@example.com` / `admin`). Update `.env` with
+that URL and login for local use. On the first login, sign in through the browser and
+accept the terms before using the account with the MCP server. Stop the instance
+while preserving its data with `npm run planka:down`, or stop it and delete its
+volumes with `npm run planka:clear`.
 
 ## Contributing
 

@@ -20,6 +20,23 @@ npm run inspector
 
 Set the required `PLANKA_*` values in a local `.env` file. Use `.env.example` as the reference and never commit real credentials.
 
+### Local Planka instance
+
+With Docker and Docker Compose installed, run the bundled development Planka instance
+at `http://localhost:3000`:
+
+```bash
+npm run planka:up
+```
+
+For local use, set `PLANKA_BASE_URL=http://localhost:3000`,
+`PLANKA_AGENT_EMAIL=admin@example.com`, and `PLANKA_AGENT_PASSWORD=admin` in `.env`.
+Before using these credentials with the MCP server or integration tests, sign in to
+Planka in a browser and accept the terms presented on the first login.
+Stop the containers while preserving their data with `npm run planka:down`. To stop
+the containers and delete the Planka and PostgreSQL volumes, run
+`npm run planka:clear`.
+
 ## Quality Checks
 
 Run the full check suite before opening a pull request:
@@ -34,8 +51,8 @@ This runs type checking, Biome linting, build, and Jest tests. For targeted work
 
 `npm run test:integration` requires a running Planka v2 instance.
 
-1. Start a local Planka instance (e.g. via Docker: `docker run -p 3000:1337 ghcr.io/plankanban/planka`)
-   or point to an existing test instance.
+1. Start the bundled local instance with `npm run planka:up`, or point to an existing
+   test instance.
 2. Set the corresponding `PLANKA_*` variables in `.env` (see `.env.example`).
 3. Run `npm run test:integration`.
 

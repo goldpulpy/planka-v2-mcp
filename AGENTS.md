@@ -13,6 +13,10 @@ This repository implements a TypeScript ESM MCP server for Planka v2.x. `index.t
 - `npm run test:integration`: exercise a configured Planka v2 instance.
 - `npm run inspector`: launch the MCP Inspector against the built server.
 - `npm run qc`: run type checking, linting, build, and unit tests; use this before submitting changes.
+- `npm run planka:up`: start the bundled Planka and PostgreSQL development stack.
+- `npm run planka:down`: stop the development stack while preserving its data.
+- `npm run planka:clear`: stop the development stack and delete its volumes.
+- `npm run clear`: delete the `dist/` and `node_modules/` directories.
 
 ## Coding Style & Naming Conventions
 
