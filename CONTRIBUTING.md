@@ -20,6 +20,10 @@ npm run inspector
 
 Set the required `PLANKA_*` values in a local `.env` file. Use `.env.example` as the reference and never commit real credentials.
 
+After creating an account for the MCP server, log in to the Planka web interface with
+that account and accept the terms of service. This first-login step is required for every
+new account, including accounts created on the Planka demo.
+
 ### Local Planka instance
 
 With Docker and Docker Compose installed, run the bundled development Planka instance
@@ -31,8 +35,6 @@ npm run planka:up
 
 For local use, set `PLANKA_BASE_URL=http://localhost:3000`,
 `PLANKA_AGENT_EMAIL=admin@example.com`, and `PLANKA_AGENT_PASSWORD=admin` in `.env`.
-Before using these credentials with the MCP server or integration tests, sign in to
-Planka in a browser and accept the terms presented on the first login.
 Stop the containers while preserving their data with `npm run planka:down`. To stop
 the containers and delete the Planka and PostgreSQL volumes, run
 `npm run planka:clear`.

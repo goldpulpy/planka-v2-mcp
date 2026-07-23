@@ -158,6 +158,11 @@ Project setup completed successfully.
 - A dedicated Planka user account for your AI agent
 - Node.js 18+ (if running locally)
 
+> [!IMPORTANT]
+> After creating the MCP account, log in to the Planka web interface with that account
+> and accept the terms of service before configuring or starting the MCP server. This is
+> required for every new account.
+
 ### Configure Your MCP Client
 
 Every MCP-compatible client uses the same underlying command - only the config file location (and occasionally the JSON wrapper) differs. See [Client Configuration Examples](#client-configuration-examples) below for your specific tool.
@@ -372,7 +377,7 @@ with the four `PLANKA_*` environment variables set as shown above.
 <br>
 
 - Confirm `PLANKA_BASE_URL` has no trailing slash and is reachable from the machine running the MCP server (not just your browser).
-- Check that the agent user can log in with those exact credentials through Planka's normal web UI first.
+- Check that the agent user can log in with those exact credentials through Planka's normal web UI and has accepted the terms of service.
 
 </details>
 
@@ -413,10 +418,10 @@ npm run inspector
 
 The development instance requires Docker Compose and is available at
 `http://localhost:3000` (login: `admin@example.com` / `admin`). Update `.env` with
-that URL and login for local use. On the first login, sign in through the browser and
-accept the terms before using the account with the MCP server. Stop the instance
-while preserving its data with `npm run planka:down`, or stop it and delete its
-volumes with `npm run planka:clear`.
+that URL and login for local use. As with any newly created MCP account, sign in
+through the browser and accept the terms of service before using the account with the
+MCP server. Stop the instance while preserving its data with `npm run planka:down`,
+or stop it and delete its volumes with `npm run planka:clear`.
 
 ## Contributing
 
